@@ -30,4 +30,7 @@ public class UserPojo {
     @NotNull
     private String address;
 
+    @NotNull
+    private String email;
+
 }

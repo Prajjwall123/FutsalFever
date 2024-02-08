@@ -1,5 +1,6 @@
 package com.example.FutsalFever.service.impl;
 
+import com.example.FutsalFever.config.PasswordEncoderUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.FutsalFever.entity.User;
@@ -27,8 +28,9 @@ public class UserServiceImpl implements UserService {
 
         user.setFullName(userPojo.getFullName());
         user.setUserName(userPojo.getUserName());
-        user.setPassword(userPojo.getPassword());
+        user.setPassword(PasswordEncoderUtil.getInstance().encode(userPojo.getPassword()));
         user.setAddress(userPojo.getAddress());
+        user.setEmail(userPojo.getEmail());
 
 
         userRepository.save(user);
