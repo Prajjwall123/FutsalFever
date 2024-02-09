@@ -24,7 +24,7 @@ public class UserPojo {
     @NotNull
     private String userName;
 
-    @NotNull
+    @NotNull(message = "password can not be null")
     private String password;
 
     @NotNull
