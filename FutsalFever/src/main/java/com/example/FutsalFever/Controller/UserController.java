@@ -34,6 +34,11 @@ public class UserController {
         return userService.getById(id);
     }
 
+    @GetMapping("/getByEmail/{email}")
+    public Optional<User> getDataByEmail(@PathVariable("email") String email){
+        return userService.getByEmail(email);
+    }
+
     @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable("id") Integer id){
         userService.deleteById(id);

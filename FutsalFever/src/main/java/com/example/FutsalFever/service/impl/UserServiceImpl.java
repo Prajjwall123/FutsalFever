@@ -18,12 +18,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Override
     public void saveUser(UserPojo userPojo) {
+        // Check if the email already exists in the database
+        Optional<User> existingUser = userRepository.getUserByEmail(userPojo.getEmail());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("Email is already registered");
+        }
 
         User user = new User();
 
-        if(userPojo.getId()!=null){
-            user=userRepository.findById(userPojo.getId())
-                    .orElseThrow(()-> new NoSuchElementException("No data found"));
+        if (userPojo.getId() != null) {
+            user = userRepository.findById(userPojo.getId())
+                    .orElseThrow(() -> new NoSuchElementException("No data found"));
         }
 
         user.setFullName(userPojo.getFullName());
@@ -31,7 +36,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(PasswordEncoderUtil.getInstance().encode(userPojo.getPassword()));
         user.setAddress(userPojo.getAddress());
         user.setEmail(userPojo.getEmail());
-
 
         userRepository.save(user);
     }
@@ -49,5 +53,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> getByEmail(String email) {
+        return userRepository.getUserByEmail(email); // Implement findByEmail in UserRepository
     }
 }
