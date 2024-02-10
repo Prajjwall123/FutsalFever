@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/futsal-slots")
@@ -57,5 +58,15 @@ public class FutsalSlotController {
     public ResponseEntity<Void> deleteFutsalSlot(@PathVariable Integer id) {
         futsalSlotService.deleteSlot(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/futsals/{futsalId}")
+    public ResponseEntity<List<FutsalSlot>> getAllFutsalSlotsForFutsal(@PathVariable Integer futsalId) {
+        List<FutsalSlot> futsalSlots = futsalSlotService.getAllSlotsForFutsal(futsalId);
+        if (!futsalSlots.isEmpty()) {
+            return new ResponseEntity<>(futsalSlots, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

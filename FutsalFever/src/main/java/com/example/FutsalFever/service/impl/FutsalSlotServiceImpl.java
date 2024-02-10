@@ -7,6 +7,8 @@ import com.example.FutsalFever.repository.FutsalSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
+
 import com.example.FutsalFever.service.FutsalSlotService;
 import com.example.FutsalFever.repository.FutsalRepository;
 
@@ -62,5 +64,10 @@ public class FutsalSlotServiceImpl implements FutsalSlotService {
     @Override
     public void deleteSlot(Integer id) {
         futsalSlotRepository.deleteById(id);
+    }
+
+    @Override
+    public List<FutsalSlot> getAllSlotsForFutsal(Integer futsalId) {
+        return futsalSlotRepository.findAllByFutsalId(futsalId);
     }
 }

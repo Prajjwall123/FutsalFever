@@ -30,8 +30,8 @@ public class Futsal {
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // Name of the foreign key column
-    private User user; // Representing the user who created the futsal
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
 }
