@@ -13,9 +13,6 @@ public class FutsalSlot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @Column(name = "futsal_id") // Foreign key column
-//    private Integer futsalId;
-
     @ManyToOne
     @JoinColumn(name = "futsal_id") // Mapping the foreign key
     private Futsal futsal;
