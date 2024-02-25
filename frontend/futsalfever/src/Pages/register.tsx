@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Register } from '../services/user-service';
+import { Register, RegisterAdmin } from '../services/user-service'; // Update with your service imports
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ const RegisterPage: React.FC = () => {
     password: '',
     address: '',
     email: '',
+    userType: 'user',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,27 +21,34 @@ const RegisterPage: React.FC = () => {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleUserTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+};
+
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle form submission here, you can access form data from 'formData' state
-    console.log('Form Data:', formData);
+    const registerService = formData.userType === 'admin' ? RegisterAdmin : Register;
 
-    //validation 
-
-    //call server api to send data 
-    Register(formData).then((resp)=>{
-      console.log(resp)
-      console.log("sucess log")
-      toast.success("User Registered Successfully")
-    }).catch((error)=>{
-      console.log(error)
-      console.log("error log")
-    })
+    registerService(formData)
+      .then((resp) => {
+        console.log(resp);
+        console.log('success log');
+        toast.success('Registered Successfully');
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log('error log');
+      });
   };
 
   return (
     <div>
-      <h2>RegisterPage</h2>
+      <h2>Register Page</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="userName">User Name:</label>
@@ -92,7 +100,20 @@ const RegisterPage: React.FC = () => {
             onChange={handleChange}
           />
         </div>
-        <button type="submit">Submit</button>
+        <div>
+          <label htmlFor="userType">User Type:</label>
+          <select
+          id="userType"
+          name="userType"
+          value={formData.userType}
+          onChange={handleUserTypeChange}
+        >
+          <option value="user">Customer</option>
+          <option value="admin">Futsal Owner</option>
+        </select>
+
+        </div>
+        <button type="submit">Register</button>
       </form>
     </div>
   );

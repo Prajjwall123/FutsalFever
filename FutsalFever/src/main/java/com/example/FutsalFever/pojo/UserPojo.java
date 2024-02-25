@@ -1,5 +1,6 @@
 package com.example.FutsalFever.pojo;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -32,5 +33,8 @@ public class UserPojo {
 
     @NotNull
     private String email;
+
+    @NotNull
+    private boolean is_admin;
 
 }

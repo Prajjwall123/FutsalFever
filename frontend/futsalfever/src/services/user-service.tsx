@@ -6,6 +6,13 @@ export const Register = (user: { userName: string; fullName: string; password: s
     .then((response)=> response.data);
 };
 
+export const RegisterAdmin = (admin: { userName: string; fullName: string; password: string; address: string; email: string; }) => {
+    return myAxios
+        .post('/user/saveAdmin', admin)
+        .then((response) => response.data);
+};
+
+
 export const Login = (credentials: { email: string; password: string; }) => {
     return myAxios
     .post('/login',  credentials)

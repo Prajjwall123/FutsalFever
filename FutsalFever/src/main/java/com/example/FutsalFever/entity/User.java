@@ -35,6 +35,9 @@ public class User implements UserDetails {
     @Column(name="address", nullable = false)
     private String address;
 
+    @Column(name = "is_admin", nullable = false)
+    private boolean is_admin;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             foreignKey = @ForeignKey(name = "FK_users_roles_userId"),
@@ -52,10 +55,6 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
-
-
-
-
 
     @Override
     public String getUsername() {

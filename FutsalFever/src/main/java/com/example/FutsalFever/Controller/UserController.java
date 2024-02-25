@@ -24,6 +24,13 @@ public class UserController {
         return "data created successfully";
     }
 
+    @PostMapping("/saveAdmin")
+    public String saveAdminUser(@Valid @RequestBody UserPojo userPojo){
+        userPojo.set_admin(true);
+        userService.saveUser(userPojo);
+        return "admin user create successfully.";
+    }
+
     @GetMapping("/getAll")
     public List<User> getAllData(){
         return userService.getAllData();
