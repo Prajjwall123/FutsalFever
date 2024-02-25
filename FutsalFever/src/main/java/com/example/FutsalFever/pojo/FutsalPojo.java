@@ -28,6 +28,9 @@ public class FutsalPojo {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "qr_url")
+    private String qrUrl;
+
     @Column(name = "user_id")
     private Integer userId;
 }

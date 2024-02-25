@@ -26,6 +26,9 @@ public class Futsal {
     @Column(name = "image", nullable = false)
     private String image;
 
+    @Column(name = "qr", nullable = false)
+    private String qr;
+
     @Column(name = "price", nullable = false)
     private Double price;
 

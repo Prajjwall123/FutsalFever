@@ -43,6 +43,7 @@ public class FutsalServiceImpl implements FutsalService {
             futsal.setAddress(updatedFutsal.getAddress());
             futsal.setPrice(updatedFutsal.getPrice());
             futsal.setImage(updatedFutsal.getImage());
+            futsal.setQr(updatedFutsal.getQr());
             return futsalRepository.save(futsal);
         }
         return null;
