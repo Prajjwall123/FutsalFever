@@ -27,4 +27,6 @@ public class BookingPojo {
     private boolean verified = false;
     @Column(name = "futsalId", nullable = false)
     private Integer futsalId;
+    @Column(name = "username", nullable = false)
+    private String username;
 }

@@ -34,6 +34,11 @@ public class FutsalController {
         return futsalService.getFutsalById(id);
     }
 
+    @GetMapping("/getByName/{name}")
+    public Futsal getFutsalByName(@PathVariable String name) {
+        return futsalService.getFutsalByName(name);
+    }
+
     @PostMapping("/save")
     public Futsal saveFutsal(@RequestBody Futsal futsal) {
         // Fetch the authenticated user details
@@ -56,10 +61,37 @@ public class FutsalController {
         }
     }
 
-    @PutMapping("/updateById/{id}")
-    public Futsal updateFutsal(@PathVariable Integer id, @RequestBody Futsal updatedFutsal) {
-        return futsalService.updateFutsal(id, updatedFutsal);
+    @PutMapping("/updateByOwnerId/{ownerEmail}")
+    public Futsal updateFutsalByOwnerId(@PathVariable String ownerEmail, @RequestBody Futsal updatedFutsal) {
+        // Fetch the owner ID using the owner's email
+        Optional<User> ownerOptional = userService.getByEmail(ownerEmail);
+        if (ownerOptional.isPresent()) {
+            User owner = ownerOptional.get();
+            int ownerId = owner.getId();
+
+            // Update the futsal using the owner's ID
+            return futsalService.updateFutsal(ownerId, updatedFutsal);
+        } else {
+            throw new RuntimeException("Owner not found with email: " + ownerEmail);
+        }
     }
+
+
+    @GetMapping("/getByOwnerEmail/{ownerEmail}")
+    public Futsal getFutsalByOwnerId(@PathVariable String ownerEmail) {
+        // Fetch futsal by owner ID using the FutsalService
+        Optional<User> ownerId = userService.getByEmail(ownerEmail);
+        if (ownerId.isPresent()) {
+            User user = ownerId.get();
+
+            // Extract the user's ID
+            int newOwner = user.getId();
+
+            return futsalService.getFutsalByOwnerId(newOwner);
+        }
+        throw new RuntimeException("Owner not found with email:"+ownerEmail);
+    }
+
 
     @DeleteMapping("/deleteById/{id}")
     public void deleteFutsal(@PathVariable Integer id) {

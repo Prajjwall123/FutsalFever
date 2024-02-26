@@ -12,5 +12,6 @@ public interface FutsalService {
     Futsal saveFutsal(Futsal futsal);
     void deleteFutsal(Integer id);
     Futsal updateFutsal(Integer id, Futsal updatedFutsal);
-
+    Futsal getFutsalByOwnerId(Integer ownerId);
+    Futsal getFutsalByName(String name);
 }

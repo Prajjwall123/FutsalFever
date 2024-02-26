@@ -32,4 +32,7 @@ public class Booking {
     @JoinColumn(name = "futsal_id")
     private Futsal futsal;
 
+    @Column(name = "username",nullable=false)
+    private String username;
+
 }

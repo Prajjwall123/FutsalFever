@@ -74,6 +74,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setSlot(futsalSlotOfHere);
             booking.setUser(user);
             booking.setPaymentImage(bookingPojo.getPaymentImage());
+            booking.setUsername(bookingPojo.getUsername());
             booking.setVerified(false);
 
             // Save the booking to the database
