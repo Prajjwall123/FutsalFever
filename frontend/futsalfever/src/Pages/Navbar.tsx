@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Import useHistory
 import { getFutsalByName } from '../services/futsalHelper';
 import Logo from './logo-2.svg';
 
+
 const NavBar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const navigate = useNavigate();

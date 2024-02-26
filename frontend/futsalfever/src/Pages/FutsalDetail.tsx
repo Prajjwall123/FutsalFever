@@ -41,7 +41,8 @@ const BookingDetail = () => {
     // Prepare the booking data
     const bookingData = {
       slotId: selectedSlotId, // Selected slot ID
-      paymentImage: paymentInput // Assuming paymentInput holds the payment image string
+      paymentImage: paymentInput,// Assuming paymentInput holds the payment image string
+      futsal_id:futsalId
 
     };
 

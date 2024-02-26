@@ -1,4 +1,5 @@
 package com.example.FutsalFever.pojo;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +9,9 @@ import jakarta.persistence.*;
 @Setter
 public class FutsalSlotPojo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Assuming auto-increment
     private Integer id;
-    @Column(name = "futsalId", nullable = false)
+    @NotNull(message = "futsal id cant be null")
     private Integer futsalId;
     @Column(name = "startTime", nullable = false)
     private String startTime;

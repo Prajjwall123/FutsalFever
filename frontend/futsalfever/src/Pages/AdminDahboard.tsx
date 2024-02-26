@@ -93,7 +93,7 @@ const FutsalDetailsPage: React.FC = () => {
           {/* Button for QR Code Upload */}
           <button onClick={handleUpdateFutsal} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">Update Futsal</button>
         </div>
-        <CreateSlotComponent />
+        <CreateSlotComponent futsalId={futsalId} />
 
       </div>
     </div>

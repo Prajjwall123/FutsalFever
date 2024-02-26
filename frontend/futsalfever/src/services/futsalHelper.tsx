@@ -37,17 +37,38 @@ export const getAllFutsals = () => {
 
 // Function to fetch a specific futsal by ID
 export const getFutsalById = (futsalId: number) => {
-    // Update token in headers in case it has changed
-    updateTokenInHeaders();
-  
-    // Make a GET request to fetch the futsal by ID
-    return futsalAxios.get(`futsals/getById/${futsalId}`)
-      .then(response => response.data)
-      .catch(error => {
-        console.error('Error fetching futsal by ID:', error);
-        throw error; // Rethrow the error for handling in the calling code
-      });
-  };
+  // Update token in headers in case it has changed
+  updateTokenInHeaders();
+
+  // Make a GET request to fetch the futsal by ID
+  return futsalAxios.get(`futsals/getById/${futsalId}`)
+    .then(response => {
+      // Check if the response is successful
+      if (response && response.data) {
+        return response.data; // Return the data if successful
+      } else {
+        throw new Error('Empty response'); // Throw an error if the response is empty
+      }
+    })
+    .catch(error => {
+      // Check if it's a network error
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Server responded with error:', error.response.data);
+        throw new Error('Server responded with error');
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+        throw new Error('No response received');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up request:', error.message);
+        throw error;
+      }
+    });
+};
+
 
 // Function to fetch a specific futsal by name
 export const getFutsalByName = (futsalName: string) => {
@@ -65,7 +86,9 @@ export const getFutsalByName = (futsalName: string) => {
 
 // Function to fetch Futsal slots by Futsal ID
 export const getFutsalSlotsByFutsalId = async (futsalId: number) => {
+  updateTokenInHeaders();
   try {
+    console.log(futsalId)
     const response = await futsalAxios.get(`futsal-slots/futsals/${futsalId}`);
     console.log(response.data)
     return response.data;
@@ -202,6 +225,7 @@ export const getAllBookingRequests = async (futsalId: number) => {
   
 
 export const updateBookingStatus = async (bookingId: number, action: string) => {
+  updateTokenInHeaders();
   try {
     const response = await futsalAxios.put(`/bookings/${action}/${bookingId}`);
     return response.data; // Return the updated booking data
@@ -212,6 +236,7 @@ export const updateBookingStatus = async (bookingId: number, action: string) => 
 };
 
 export const createSlot = async (slotData:any) => {
+  updateTokenInHeaders();
   try {
     const response = await futsalAxios.post('/futsal-slots/save', slotData);
     console.log(response)

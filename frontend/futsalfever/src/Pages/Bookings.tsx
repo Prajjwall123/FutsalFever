@@ -39,38 +39,54 @@ const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
   
 
   return (
-    <div>
-      <h2>Booking Requests</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Slot Time</th>
-            <th>Payment Image</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-  {bookingRequests.map(booking => (
-    <tr key={booking.id}>
-      <td>{booking.user.fullName}</td>
-      <td>{booking.slot.startTime} - {booking.slot.endTime}</td>
-      <td><img src={booking.paymentImage} alt="Payment" /></td>
-      <td>
-        {booking.verified ? 'Verified' : 'Pending'}
-        {!booking.verified && ( // Render buttons only for pending bookings
-          <div>
-          <button onClick={() => handleUpdateStatus(booking.id, 'accept')}>Accept</button>
-          <button onClick={() => handleUpdateStatus(booking.id, 'reject')}>Reject</button>
-        </div>
-        )}
-      </td>
-    </tr>
-  ))}
-</tbody>
+<div className="container mx-auto max-w-3xl px-4 py-8">
+  <h2 className="text-2xl font-semibold mb-4 text-gray-800">Booking Requests</h2>
 
-      </table>
-    </div>
+  <table className="table-auto w-full rounded-lg shadow-md">
+    <thead>
+      <tr className="bg-gray-100 text-left text-sm font-medium">
+        <th className="px-4 py-2">User</th>
+        <th className="px-4 py-2">Slot Time</th>
+        <th className="px-4 py-2">Payment Image</th>
+        <th className="px-4 py-2">Status</th>
+        <th className="px-4 py-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {bookingRequests.map((booking) => (
+        <tr key={booking.id} className="border-b border-gray-200">
+          <td className="px-4 py-2">{booking.user.fullName}</td>
+          <td className="px-4 py-2">{booking.slot.startTime} - {booking.slot.endTime}</td>
+          <td className="px-4 py-2">
+            <img src={booking.paymentImage} alt="Payment" className="w-10 h-10 object-cover rounded-lg" />
+          </td>
+          <td className="px-4 py-2 text-gray-500">
+            {booking.verified ? 'Verified' : 'Pending'}
+          </td>
+          <td className="px-4 py-2 flex space-x-2">
+            {!booking.verified && (
+              <>
+                <button
+                  className="rounded-lg bg-green-500 text-white px-2 py-1 hover:bg-green-700"
+                  onClick={() => handleUpdateStatus(booking.id, 'accept')}
+                >
+                  Accept
+                </button>
+                <button
+                  className="rounded-lg bg-red-500 text-white px-2 py-1 hover:bg-red-700"
+                  onClick={() => handleUpdateStatus(booking.id, 'reject')}
+                >
+                  Reject
+                </button>
+              </>
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
   );
 };
 

@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getFutsalByOwnerId, updateFutsalByOwnerId } from '../services/futsalHelper';
 import Bookings from './Bookings';
+import NavBar from './Navbar';
 import CreateSlotComponent from './createSlot';
 const AdminFutsalPage: React.FC = () => {
   const [futsalDetails, setFutsalDetails] = useState<any>({});
@@ -53,8 +54,13 @@ const AdminFutsalPage: React.FC = () => {
 
 
   return (
+    <div className="dashboard bg-gray-900 min-h-screen rounded-3xl">
+      {/* Navigation Bar */}
+      <NavBar />
     <div className="container mx-auto max-w-6xl px-4 py-8 mt-20 mb-0">
-      <h2 className="text-2xl font-semibold text-gray-500 mb-4">Futsal Details Page</h2>
+
+
+  <h2 className="text-2xl font-semibold text-gray-500 mb-4">Futsal Details Page</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Futsal Details */}
         <div className="lg:flex lg:flex-col lg:space-y-4 dark:bg-gray-800 dark:border-gray-700 rounded-3xl">
@@ -72,13 +78,25 @@ const AdminFutsalPage: React.FC = () => {
           </div>
           <div className='px-4'>
           <p className="text-sm text-gray-500 ">Upload Owner's QR Code</p>
-              <input type="file" accept="image/*" onChange={handleImageChange} className="rounded-lg bg-gray-200 px-4 py-2" />
-            </div>
-          {/* Button for Image Upload */}
-          <div className='px-4'>
-            <p className="text-sm text-gray-500">Upload Futsal Image</p>
-            <input type="file" accept="image/*" onChange={handleImageChange} className="rounded-lg bg-gray-200 px-4 py-2" />
-          </div>
+          <input 
+            type="text" 
+            value={futsalDetails.ownerQRCode} 
+            onChange={(e) => setFutsalDetails({...futsalDetails, ownerQRCode: e.target.value})} 
+            className="rounded-lg bg-gray-200 px-4 py-2" 
+            placeholder="Enter owner's QR code URL" 
+          />
+        </div>
+        {/* Button for Image Upload */}
+        <div className='px-4'>
+          <p className="text-sm text-gray-500">Upload Futsal Image</p>
+          <input 
+            type="text" 
+            value={futsalDetails.futsalImage} 
+            onChange={(e) => setFutsalDetails({...futsalDetails, futsalImage: e.target.value})} 
+            className="rounded-lg bg-gray-200 px-4 py-2" 
+            placeholder="Enter futsal image URL" 
+          />
+        </div>
           <button onClick={handleUpdateFutsal} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">Update Futsal</button>
 
         </div>
@@ -99,8 +117,9 @@ const AdminFutsalPage: React.FC = () => {
         </div>
         {/* Bookings component for managing booking requests */}
       <Bookings futsalId={futsalDetails.id} />
-      <CreateSlotComponent />
+      <CreateSlotComponent futsalId={futsalDetails.id}/>
 
+    </div>
     </div>
 
       

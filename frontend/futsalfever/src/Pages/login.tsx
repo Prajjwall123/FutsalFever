@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Login } from '../services/user-service';
+import Logo from './logo-2.svg';
+
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -62,52 +64,70 @@ Login(credentials)
   };
 
   return (
-      <div className='w-11/12 max-w-[700px] px-10 py-20 rounded-3xl dark:bg-gray-800 dark:border-gray-700 border-2 border-gray-700 mx-auto mt-20'>
-        <h1 className='text-5xl font-semibold text-white'>Welcome Back</h1>
-        <p className='font-medium text-lg text-gray-300 mt-4'>Welcome back! Please enter your details.</p>
-
-        <div className='mt-8'>
-          <form onSubmit={handleSubmit}>
-            {/* Email */}
-            <div className='flex flex-col'>
-              <label className='text-lg font-medium text-gray-300'>Email</label>
-              <input
-                type="text"
-                id="email"
-                name="email"
-                value={credentials.email}
-                onChange={(e) => handleChange(e, 'email')}
-                className='w-full border-2 border-gray-700 rounded-xl p-4 mt-1 bg-transparent'
-                placeholder="Enter your email" />
-            </div>
-            {/* Password */}
-            <div className='flex flex-col mt-4'>
-              <label className='text-lg font-medium text-gray-300'>Password</label>
-              <input
-                id="password"
-                name="password"
-                value={credentials.password}
-                onChange={(e) => handleChange(e, 'password')}
-                className='w-full border-2 border-gray-700 rounded-xl p-4 mt-1 bg-transparent'
-                placeholder="Enter your password"
-                type="password" />
-            </div>
-
-            {/* Sign in */}
-            <div className='mt-8'>
-              <button type="submit" className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-4 bg-violet-500 rounded-xl text-white font-bold text-lg'>
-                Sign in
-              </button>
-            </div>
-          </form>
-
-          {/* No account */}
-          <div className='mt-8 flex justify-center items-center'>
-            <p className='font-medium text-base text-gray-300'>Don't have an account?</p>
-            <Link to="/register" className='ml-2 font-medium text-base text-violet-500'>Sign up</Link>
-          </div>
-        </div>
+    <div
+  className="w-11/12 max-w-[400px] max-h-[600px] px-10 py-10 rounded-3xl dark:bg-gray-800 dark:border-gray-700 border-2 border-gray-700 mx-auto mt-20"
+>
+  <div className="flex flex-col items-center justify-center">
+    {/* Logo and title */}
+    <div className="flex items-center justify-center mb-8">
+      <div className="flex-shrink-0">
+        <img className="h-10 w-10" src={Logo} alt="Logo" />
       </div>
+      <div className="ml-2 text-lg font-bold text-white text-center">FutsalFever</div>
+    </div>
+
+    {/* Login form and no account section */}
+    <div className="flex flex-col space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Email */}
+        <div className="flex flex-col">
+          <label className="text-lg font-medium text-gray-300">Email</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            value={credentials.email}
+            onChange={(e) => handleChange(e, "email")}
+            className="w-full border-2 border-gray-700 rounded-xl p-4 mt-1 bg-transparent placeholder:text-gray-400"
+            placeholder="Enter your email"
+          />
+        </div>
+
+        {/* Password */}
+        <div className="flex flex-col">
+          <label className="text-lg font-medium text-gray-300">Password</label>
+          <input
+            id="password"
+            name="password"
+            value={credentials.password}
+            onChange={(e) => handleChange(e, "password")}
+            className="w-full border-2 border-gray-700 rounded-xl p-4 mt-1 bg-transparent placeholder:text-gray-400"
+            placeholder="Enter your password"
+            type="password"
+          />
+        </div>
+
+        {/* Sign in */}
+        <div className="flex justify-center items-center">
+          <button
+            type="submit"
+            className="rounded-lg bg-blue-500 text-white px-4 py-2 hover:bg-blue-700"
+          >
+            Sign in
+          </button>
+        </div>
+      </form>
+
+      {/* No account */}
+      <div className="flex justify-center items-center">
+        <p className="font-medium text-base text-gray-300">Don't have an account?</p>
+        <Link to="/register" className="ml-2 font-medium text-base text-blue-700">
+          Sign up
+        </Link>
+      </div>
+    </div>
+  </div>
+</div>
 
   );
 };

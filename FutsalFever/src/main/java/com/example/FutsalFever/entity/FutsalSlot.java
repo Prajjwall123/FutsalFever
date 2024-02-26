@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class FutsalSlot {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Assuming auto-increment
     private Integer id;
 
     @ManyToOne
