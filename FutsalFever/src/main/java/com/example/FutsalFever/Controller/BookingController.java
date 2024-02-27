@@ -37,9 +37,10 @@ public class BookingController {
         return new ResponseEntity<>(acceptedBooking, HttpStatus.OK);
     }
 
-    @PutMapping("/reject/{bookingId}")
-    public ResponseEntity<Booking> rejectBooking(@PathVariable Integer bookingId) {
-        Booking rejectedBooking = bookingService.rejectBooking(bookingId);
-        return new ResponseEntity<>(rejectedBooking, HttpStatus.OK);
+    @DeleteMapping("/deleteById/{bookingId}")
+    public String rejectBooking(@PathVariable Integer bookingId) {
+        bookingService.rejectBooking(bookingId);
+
+        return "deleted the booking";
     }
 }

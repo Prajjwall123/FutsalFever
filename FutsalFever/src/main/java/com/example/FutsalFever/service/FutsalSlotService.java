@@ -13,4 +13,6 @@ public interface FutsalSlotService {
     FutsalSlot saveSlot(FutsalSlotPojo slotDTO);
     FutsalSlot updateSlot(Integer id, FutsalSlotPojo updatedSlotDTO);
     void deleteSlot(Integer id);
+
+    List<FutsalSlot> getPendingSlotsForFutsal(Integer futsalId);
 }

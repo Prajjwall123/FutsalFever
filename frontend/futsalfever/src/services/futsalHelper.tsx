@@ -98,6 +98,21 @@ export const getFutsalSlotsByFutsalId = async (futsalId: number) => {
   }
 };
 
+
+// Function to fetch Futsal slots by Futsal ID
+export const getFutsalSlotsByFutsalIdPending = async (futsalId: number) => {
+  updateTokenInHeaders();
+  try {
+    console.log(futsalId)
+    const response = await futsalAxios.get(`futsal-slots/futsals/${futsalId}/pending-slots`);
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching futsal slots by futsal ID:', error);
+    throw error; // Rethrow the error for handling in the calling code
+  }
+};
+
 // Function to update futsal details by ID
 export const updateFutsalByOwnerId = async (updatedFutsalDetails: any) => {
   try {
@@ -212,7 +227,7 @@ export const getAllBookingRequests = async (futsalId: number) => {
   updateTokenInHeaders();
   try {
     console.log("the futsal id is:" + futsalId);
-    const response = await futsalAxios.get(`/bookings/pending/` + 11);
+    const response = await futsalAxios.get(`/bookings/pending/${futsalId}`);
     console.log(response.data);
     return response.data; // Assuming the response contains a 'bookings' array
   } catch (error) {
@@ -227,15 +242,33 @@ export const getAllBookingRequests = async (futsalId: number) => {
 export const updateBookingStatus = async (bookingId: number, action: string) => {
   updateTokenInHeaders();
   try {
-    const response = await futsalAxios.put(`/bookings/${action}/${bookingId}`);
-    return response.data; // Return the updated booking data
+    let response;
+    if (action === 'reject') {
+      response = await deleteBookingById(bookingId);
+    } else {
+      response = await futsalAxios.put(`/bookings/${action}/${bookingId}`);
+    }
+    return response.data;
   } catch (error) {
     console.error(`Error ${action === 'accept' ? 'accepting' : 'rejecting'} booking:`, error);
     throw error;
   }
 };
 
+export const deleteBookingById = async (bookingId: number) => {
+  updateTokenInHeaders();
+  try {
+    const response = await futsalAxios.delete(`/bookings/deleteById/${bookingId}`);
+    return response;
+  } catch (error) {
+    console.error('Error deleting booking by ID:', error);
+    throw error;
+  }
+};
+
+
 export const createSlot = async (slotData:any) => {
+  console.log(slotData)
   updateTokenInHeaders();
   try {
     const response = await futsalAxios.post('/futsal-slots/save', slotData);

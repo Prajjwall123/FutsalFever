@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getFutsalSlotsByFutsalId } from '../services/futsalHelper';
+import { getFutsalSlotsByFutsalIdPending } from '../services/futsalHelper';
 
 // Define the interface for Futsal Slot
 interface FutsalSlot {
@@ -25,7 +25,7 @@ const FutsalSlotsComponent: React.FC<FutsalSlotsComponentProps> = ({ futsalId, o
       setLoading(true);
       try {
         console.log(futsalId)
-        const slotsData = await getFutsalSlotsByFutsalId(futsalId);
+        const slotsData = await getFutsalSlotsByFutsalIdPending(futsalId);
         setFutsalSlots(slotsData);
         setLoading(false);
       } catch (error) {

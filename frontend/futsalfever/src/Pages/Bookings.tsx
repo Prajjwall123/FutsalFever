@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getAllBookingRequests, updateBookingStatus } from '../services/futsalHelper';
+import { deleteBookingById, getAllBookingRequests, updateBookingStatus } from '../services/futsalHelper';
 
 const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
   const [bookingRequests, setBookingRequests] = useState<any[]>([]);
 
   useEffect(() => {
     fetchBookingRequests();
-  }, []);
+  }, [futsalId]);
 
   const fetchBookingRequests = () => {
     getAllBookingRequests(futsalId)
@@ -17,76 +17,85 @@ const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
         console.error('Error fetching booking requests:', error);
       });
   };
-  const handleUpdateStatus = (bookingId: number, action: string) => {
-    updateBookingStatus(bookingId, action)
+
+  const handleAcceptBooking = (bookingId: number) => {
+    updateBookingStatus(bookingId, 'accept')
       .then(updatedBooking => {
-        // Find the index of the updated booking in the bookingRequests array
-        const updatedIndex = bookingRequests.findIndex(booking => booking.id === bookingId);
-        if (updatedIndex !== -1) {
-          // Create a new array with the updated booking replacing the old one
-          const updatedBookings = [...bookingRequests];
-          updatedBookings[updatedIndex] = updatedBooking;
-          // Update the state with the new array
-          setBookingRequests(updatedBookings);
-        } else {
-          console.error('Updated booking not found in the list.');
-        }
+        updateBookingInState(updatedBooking);
       })
       .catch(error => {
-        console.error(`Error ${action === 'accept' ? 'accepting' : 'rejecting'} booking:`, error);
+        console.error('Error accepting booking:', error);
       });
   };
-  
+
+  const handleRejectBooking = (bookingId: number) => {
+    deleteBookingById(bookingId)
+      .then(() => {
+        updateBookingStatus(bookingId, 'reject')
+          .then(updatedBooking => {
+            updateBookingInState(updatedBooking);
+          })
+          .catch(error => {
+            console.error('Error rejecting booking:', error);
+          });
+      })
+      .catch(error => {
+        console.error('Error deleting booking:', error);
+      });
+  };
+
+  const updateBookingInState = (updatedBooking: any) => {
+    const updatedIndex = bookingRequests.findIndex(booking => booking.id === updatedBooking.id);
+    if (updatedIndex !== -1) {
+      const updatedBookings = [...bookingRequests];
+      updatedBookings[updatedIndex] = updatedBooking;
+      setBookingRequests(updatedBookings);
+    } else {
+      console.error('Updated booking not found in the list.');
+    }
+  };
 
   return (
-<div className="container mx-auto max-w-3xl px-4 py-8">
-  <h2 className="text-2xl font-semibold mb-4 text-gray-800">Booking Requests</h2>
+    <div className="container mx-auto max-w-3xl px-4 py-8">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Booking Requests</h2>
 
-  <table className="table-auto w-full rounded-lg shadow-md">
-    <thead>
-      <tr className="bg-gray-100 text-left text-sm font-medium">
-        <th className="px-4 py-2">User</th>
-        <th className="px-4 py-2">Slot Time</th>
-        <th className="px-4 py-2">Payment Image</th>
-        <th className="px-4 py-2">Status</th>
-        <th className="px-4 py-2">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {bookingRequests.map((booking) => (
-        <tr key={booking.id} className="border-b border-gray-200">
-          <td className="px-4 py-2">{booking.user.fullName}</td>
-          <td className="px-4 py-2">{booking.slot.startTime} - {booking.slot.endTime}</td>
-          <td className="px-4 py-2">
-            <img src={booking.paymentImage} alt="Payment" className="w-10 h-10 object-cover rounded-lg" />
-          </td>
-          <td className="px-4 py-2 text-gray-500">
-            {booking.verified ? 'Verified' : 'Pending'}
-          </td>
-          <td className="px-4 py-2 flex space-x-2">
-            {!booking.verified && (
-              <>
-                <button
-                  className="rounded-lg bg-green-500 text-white px-2 py-1 hover:bg-green-700"
-                  onClick={() => handleUpdateStatus(booking.id, 'accept')}
-                >
-                  Accept
-                </button>
-                <button
-                  className="rounded-lg bg-red-500 text-white px-2 py-1 hover:bg-red-700"
-                  onClick={() => handleUpdateStatus(booking.id, 'reject')}
-                >
-                  Reject
-                </button>
-              </>
-            )}
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
+      <table className="table-auto w-full rounded-lg shadow-md">
+        {/* Table header */}
+        <tbody>
+          {bookingRequests.map((booking) => (
+            <tr key={booking.id} className="border-b border-gray-200">
+              {/* Table body */}
+              <td className="px-4 py-2">{booking.user.fullName}</td>
+              <td className="px-4 py-2">{booking.slot.startTime} - {booking.slot.endTime}</td>
+              <td className="px-4 py-2">
+                <img src={booking.paymentImage} alt="Payment" className="w-10 h-10 object-cover rounded-lg" />
+              </td>
+              <td className="px-4 py-2 text-gray-500">
+                {booking.verified ? 'Verified' : 'Pending'}
+              </td>
+              <td className="px-4 py-2 flex space-x-2">
+                {!booking.verified && (
+                  <>
+                    <button
+                      className="rounded-lg bg-green-500 text-white px-2 py-1 hover:bg-green-700"
+                      onClick={() => handleAcceptBooking(booking.id)}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className="rounded-lg bg-red-500 text-white px-2 py-1 hover:bg-red-700"
+                      onClick={() => handleRejectBooking(booking.id)}
+                    >
+                      Reject
+                    </button>
+                  </>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

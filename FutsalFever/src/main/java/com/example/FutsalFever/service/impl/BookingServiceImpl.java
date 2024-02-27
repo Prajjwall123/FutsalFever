@@ -48,14 +48,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking rejectBooking(Integer bookingId) {
+    public void rejectBooking(Integer bookingId) {
         // Implement logic to reject the booking with the given bookingId
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         if (booking != null) {
             // Additional logic if needed
-            return bookingRepository.save(booking);
+            bookingRepository.deleteById(booking.getId());
         }
-        return null; // Handle if booking is not found
     }
 
     @Override

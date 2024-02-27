@@ -70,4 +70,9 @@ public class FutsalSlotServiceImpl implements FutsalSlotService {
     public List<FutsalSlot> getAllSlotsForFutsal(Integer futsalId) {
         return futsalSlotRepository.findAllByFutsalId(futsalId);
     }
+
+    @Override
+    public List<FutsalSlot> getPendingSlotsForFutsal(Integer futsalId) {
+        return futsalSlotRepository.findByFutsalIdAndBooked(futsalId, false);
+    }
 }

@@ -8,8 +8,6 @@ import jakarta.persistence.*;
 @Getter
 @Setter
 public class FutsalSlotPojo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Assuming auto-increment
     private Integer id;
     @NotNull(message = "futsal id cant be null")
     private Integer futsalId;

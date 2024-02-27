@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface FutsalSlotRepository extends JpaRepository<FutsalSlot, Integer> {
     List<FutsalSlot> findAllByFutsalId(Integer futsalId);
+    List<FutsalSlot> findByFutsalIdAndBooked(Integer futsalId, boolean booked);
+
 }

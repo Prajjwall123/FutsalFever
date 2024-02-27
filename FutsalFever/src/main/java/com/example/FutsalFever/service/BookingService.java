@@ -8,6 +8,6 @@ import java.util.List;
 public interface BookingService {
     List<Booking> getPendingBookingsForFutsal(Integer futsalId);
     Booking acceptBooking(Integer bookingId);
-    Booking rejectBooking(Integer bookingId);
+    void rejectBooking(Integer bookingId);
     Booking requestBooking(BookingPojo bookingPojo);
 }

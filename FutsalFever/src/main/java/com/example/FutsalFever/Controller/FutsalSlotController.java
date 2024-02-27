@@ -69,4 +69,15 @@ public class FutsalSlotController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/futsals/{futsalId}/pending-slots")
+    public ResponseEntity<List<FutsalSlot>> getPendingFutsalSlotsForFutsal(@PathVariable Integer futsalId) {
+        List<FutsalSlot> pendingSlots = futsalSlotService.getPendingSlotsForFutsal(futsalId);
+        if (!pendingSlots.isEmpty()) {
+            return new ResponseEntity<>(pendingSlots, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
