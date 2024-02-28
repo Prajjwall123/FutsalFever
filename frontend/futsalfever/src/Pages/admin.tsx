@@ -100,12 +100,15 @@ const AdminFutsalPage: React.FC = () => {
           <button onClick={handleUpdateFutsal} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">Update Futsal</button>
 
         </div>
-        
         {/* Futsal Image & QR Code Upload */}
         <div className="lg:flex lg:flex-col lg:space-y-4">
           {/* Futsal Image */}
           <div className="flex flex-col space-y-4">
-            <img src={futsalDetails.image} alt="Futsal Image" className="rounded-lg object-cover h-60 lg:h-80" />
+          <img 
+          src={`data:image/jpeg;base64,${futsalDetails.image}`} 
+          alt="Futsal Image" 
+          className="rounded-lg object-cover h-60 lg:h-80" 
+          />
           </div>
           {/* QR Code Upload */}
           <div className="flex flex-col items-center justify-center space-y-4">

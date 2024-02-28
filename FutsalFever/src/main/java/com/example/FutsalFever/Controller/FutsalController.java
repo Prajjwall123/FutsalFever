@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import com.example.FutsalFever.service.UserService;
-import com.example.FutsalFever.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/futsals")
@@ -40,7 +42,7 @@ public class FutsalController {
     }
 
     @PostMapping("/save")
-    public Futsal saveFutsal(@RequestBody Futsal futsal) {
+    public ResponseEntity<String> saveFutsal(@ModelAttribute Futsal futsal, @RequestParam("file") MultipartFile image) {
         // Fetch the authenticated user details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName(); // Get the authenticated user's email
@@ -53,13 +55,18 @@ public class FutsalController {
             // Set the User entity to the user field of the Futsal entity
             futsal.setUser(user);
 
-            // Save the Futsal entity
-            return futsalService.saveFutsal(futsal);
+            // Save the Futsal entity with the image file
+            futsalService.saveFutsal(futsal, image);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Futsal saved successfully.");
         } else {
             // Handle the case where the user is not found
-            throw new RuntimeException("User not found with email: " + currentUserEmail);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + currentUserEmail);
         }
     }
+
+
+
 
     @PutMapping("/updateByOwnerId/{ownerEmail}")
     public Futsal updateFutsalByOwnerId(@PathVariable String ownerEmail, @RequestBody Futsal updatedFutsal) {

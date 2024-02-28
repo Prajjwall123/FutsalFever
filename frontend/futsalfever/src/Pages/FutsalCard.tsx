@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface FutsalCardProps { // Interface for data
+interface FutsalCardProps {
   name: string;
   image: string;
   location: string;
@@ -16,11 +16,14 @@ const FutsalCard: React.FC<FutsalCardProps> = ({
   onBook,
 }) => {
   return (
-    <div
-      className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-    >
+    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <a href="#">
-        <img className="rounded-t-lg" src={image} alt={name} />
+      <img
+        className="rounded-t-lg"
+        src={`data:image/jpeg;base64,${image}`}
+        alt={name}
+        style={{ width: '400px', height: '200px' }}
+      />
       </a>
       <div className="p-5">
         <a href="#">
@@ -29,8 +32,7 @@ const FutsalCard: React.FC<FutsalCardProps> = ({
           </h3>
         </a>
         <div className="flex items-center mb-2">
-          
-          <p className="text-gray-700 dark:text-gray-400 ">Address : {location}</p>
+          <p className="text-gray-700 dark:text-gray-400">Address : {location}</p>
         </div>
         <p className="text-gray-700 dark:text-gray-400 mb-2">Price : Rs.{price.toFixed(2)}</p>
         <button

@@ -40,8 +40,8 @@ const Dashboard: React.FC = () => {
       <div className="container mx-auto py-8 px-6">
         {/* Title and slogan */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-2">FutsalFever</h1>
-          <p className="text-lg text-gray-500">Find your perfect futsal match</p>
+          {/* Title and slogan */}
+          {/* Title and slogan */}
         </div>
 
         {/* Futsal Grid */}
@@ -50,8 +50,8 @@ const Dashboard: React.FC = () => {
           {futsals.map((futsal) => (
             <FutsalCard
               key={futsal.id}
-              name={futsal.name.toUpperCase()} // Display name in uppercase
-              image={futsal.image} // Replace with placeholder or actual image
+              name={futsal.name.toUpperCase()}
+              image={futsal.image}
               location={futsal.address}
               price={futsal.price}
               onBook={() => handleBook(futsal.id)}

@@ -1,16 +1,10 @@
 package com.example.FutsalFever.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 
-@Entity
-@Table(name = "futsals")
-@Getter
-@Setter
 public class FutsalPojo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +19,11 @@ public class FutsalPojo {
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @NotNull
+    private MultipartFile image;
 
-    @Column(name = "qr_url")
+
+    @NotNull
     private String qrUrl;
 
     @Column(name = "user_id")

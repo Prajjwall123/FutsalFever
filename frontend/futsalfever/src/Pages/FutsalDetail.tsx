@@ -1,30 +1,29 @@
+import QRCode from 'qrcode.react';
 import React, { useEffect, useState } from "react";
 import { getFutsalById, requestBooking } from '../services/futsalHelper';
-import FutsalSlotsComponent from './FutsalSlots'; // Import the FutsalSlotsComponent
+import FutsalSlotsComponent from './FutsalSlots';
 import NavBar from './Navbar';
-import './bookingdetails.css';
 
 const BookingDetail = () => {
-  const [paymentImagePath, setPaymentImagePath] = useState<string>('');
-  const [futsal, setFutsal] = useState<any>(null); // State to hold futsal data
-  const [loading, setLoading] = useState<boolean>(true); // State to track loading state
-  const [paymentInput, setPaymentInput] = useState<string>(''); // State to hold the payment input
-  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null); // State to hold the selected slot ID
+  const [futsal, setFutsal] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [paymentInput, setPaymentInput] = useState<string>('');
+  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const path = window.location.pathname;
-  const futsalId = parseInt(path.split('/').pop() || ''); // Extract futsal ID from URL path
+  const futsalId = parseInt(path.split('/').pop() || '');
+  const [qrData, setQRData] = useState<string>('');
 
   useEffect(() => {
-    // Fetch futsal data from the backend
     getFutsalById(futsalId)
       .then(data => {
-        setFutsal(data); // Set futsal data to state
-        setLoading(false); // Update loading state
+        setFutsal(data);
+        setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching futsal:', error);
-        setLoading(false); // Update loading state in case of error
+        setLoading(false);
       });
-  }, [futsalId]); // Execute only when futsalId changes
+  }, [futsalId]);
 
   const handlePaymentInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPaymentInput(event.target.value);
@@ -32,29 +31,20 @@ const BookingDetail = () => {
 
   const handleRequestBooking = async () => {
     try {
-      // Ensure that paymentInput and selectedSlotId are available
       if (!paymentInput || !selectedSlotId) {
         console.error('Payment input or selected slot ID is missing.');
         return;
       }
   
-    // Prepare the booking data
-    const bookingData = {
-      slotId: selectedSlotId, // Selected slot ID
-      paymentImage: paymentInput,// Assuming paymentInput holds the payment image string
-      futsal_id:futsalId
+      const bookingData = {
+        slotId: selectedSlotId,
+        paymentImage: paymentInput,
+        futsal_id: futsalId
+      };
 
-    };
-
-    // console.log('userId:', bookingData.userId);
-    console.log('slotId:', bookingData.slotId);
-    console.log('paymentImage:', bookingData.paymentImage);
-  
-      // Request the booking
       const response = await requestBooking(bookingData);
       console.log('Booking requested successfully:', response);
-  
-      // Clear the payment input and selected slot ID after booking request
+
       setPaymentInput('');
       setSelectedSlotId(null);
     } catch (error) {
@@ -64,14 +54,18 @@ const BookingDetail = () => {
 
   return (
     <div>
-      {/* Navigation Bar */}
       <NavBar />
       
       <section className="container mx-auto max-w-6xl pt-20 pb-10">
         <h1 className="text-3xl font-bold text-gray-50 text-center mb-8">Futsal Booking System</h1>
 
         <section className="bg-gray-900 text-white rounded-lg shadow-md mx-auto px-8 py-6 flex flex-col items-center">
-          <img src={futsal?.image} alt={futsal?.name} className="rounded-lg h-auto lg:h-48 object-cover mb-4" />
+          <img
+            src={`data:image/jpeg;base64,${futsal?.image}`}
+            alt={futsal?.name}
+            className="rounded-lg h-auto lg:h-48 object-cover mb-4"
+          />
+
           <h2 className="text-2xl font-semibold text-gray-50">{futsal?.name}</h2>
           <div className="flex flex-row items-center justify-between text-gray-400 text-base">
             <p>
@@ -83,7 +77,6 @@ const BookingDetail = () => {
           </div>
         </section>
 
-        {/* Display Futsal SlotsComponent with futsalId as prop */}
         <FutsalSlotsComponent futsalId={futsalId} onSlotSelect={(slotId) => setSelectedSlotId(slotId)} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-10">
@@ -98,11 +91,13 @@ const BookingDetail = () => {
           <div className="flex flex-col items-center justify-center bg-gray-800 rounded-lg shadow-md px-4 py-6">
             <p className="pb-2 text-sm text-gray-400 text-center">Scan QR to make payment</p>
             <div className="flex flex-col items-center justify-center space-y-4">
-        <div className="bg-white rounded-lg flex items-center justify-center">
-        <img src={futsal?.qr} alt="QR Code" className="rounded-lg object-cover h-40 lg:h-60" />
-        </div>
-        </div>
-        </div>
+              {futsal?.qr && (
+                <div className="bg-white rounded-lg flex items-center justify-center">
+                  <QRCode value={futsal.qr} />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </section>
     </div>

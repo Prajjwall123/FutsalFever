@@ -15,6 +15,6 @@ public interface UserService {
 
     void deleteById(Integer id);
 
-    Optional<User> getByEmail(String email); // New method declaration
+    Optional<User> getByEmail(String email);
 
 }

@@ -1,15 +1,14 @@
 package com.example.FutsalFever.service;
 
 import com.example.FutsalFever.entity.Futsal;
-import com.example.FutsalFever.entity.FutsalSlot;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 
 public interface FutsalService {
     List<Futsal> getAllFutsals();
     Futsal getFutsalById(Integer id);
-    Futsal saveFutsal(Futsal futsal);
+    Futsal saveFutsal(Futsal futsal, MultipartFile imageFile);
     void deleteFutsal(Integer id);
     Futsal updateFutsal(Integer id, Futsal updatedFutsal);
     Futsal getFutsalByOwnerId(Integer ownerId);
