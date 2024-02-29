@@ -56,6 +56,8 @@ const AdminFutsalPage: React.FC = () => {
       .then(updatedFutsal => {
         setFutsalDetails(updatedFutsal);
         console.log('Futsal details updated successfully:', updatedFutsal);
+        toast("Updated Futsal Details successfully.");
+        window.location.reload();
       })
       .catch(error => {
         console.error('Error updating futsal details:', error);

@@ -1,5 +1,7 @@
 package com.example.FutsalFever.Controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,15 +34,29 @@ public class UserController {
     }
 
     @PostMapping("/checkAdmin")
-    public boolean checkAdminUser( String userEmail) {
-        boolean isAdmin = userService.isAdmin(userEmail);
+    public String checkAdminUser(@RequestBody String requestBody) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(requestBody);
 
-        if (isAdmin) {
-            return true;
-        } else {
-            return false;
+            String userEmail = jsonNode.get("userEmail").asText();
+
+            Optional<User> user = userService.getByEmail(userEmail);
+            if(user.isPresent()) {
+                User ourUser = user.get();
+                boolean adminStatus = ourUser.is_admin();
+                if (adminStatus) {
+                    return "true";
+                }
+                return "false";
+            }
+            return "the user does not exist";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error processing the request";
         }
     }
+
 
     @GetMapping("/getAll")
     public List<User> getAllData(){

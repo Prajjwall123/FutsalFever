@@ -22,6 +22,7 @@ const CreateFutsalForm: React.FC = () => {
     price: 0,
   });
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFutsalData(prevData => ({
@@ -44,7 +45,7 @@ const CreateFutsalForm: React.FC = () => {
       console.log(futsalData)
       await createFutsal(futsalData);
       toast("Futsal created successfully")
-      // navigate("/admin")
+      navigate("/admin")
     } catch (error) {
       toast("Futsal not created")
     }

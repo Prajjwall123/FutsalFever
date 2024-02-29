@@ -40,6 +40,7 @@ const RegisterPage: React.FC = () => {
             console.log('User logged in: ', jwtTokenData);
             if (formData.userType === 'admin') {
               navigate('/futsal_creation');
+              window.location.reload()
             } else {
               navigate('/login');
             }

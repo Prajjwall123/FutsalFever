@@ -34,8 +34,10 @@ const LoginPage: React.FC = () => {
       const role = jwtTokenData.is_admin;
       if (role === 'admin') {
         navigate('/admin');
+        window.location.reload()
       } else {
         navigate('/');
+        window.location.reload()
       }
     })
       .catch((error) => {

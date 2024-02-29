@@ -56,10 +56,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public boolean isAdmin(String email) {
-        return userRepository.isAdmin(email);
-    }
 
     @Override
     public Optional<User> getByEmail(String email) {
