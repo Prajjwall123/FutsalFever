@@ -103,18 +103,25 @@ export const updateFutsalByOwnerId = async (updatedFutsalDetails: any) => {
     }
     
     const decodedToken = jwtDecode(token);
-    
     const userId = decodedToken.sub;
 
     futsalAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    const response = await futsalAxios.put(`futsals/updateByOwnerId/${userId}`, updatedFutsalDetails);
+    console.log("the user is:")
+    console.log(userId)
+
+    const response = await futsalAxios.put(`futsals/updateByOwnerId/${userId}`, updatedFutsalDetails, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
     return response.data;
   } catch (error) {
     throw error;
   }
 };
+
 
 
 export const createFutsal = (futsalData: any) => {
@@ -198,14 +205,26 @@ export const createFutsal = (futsalData: any) => {
 
     updateTokenInHeaders();
 
+    const formData = new FormData();
+
+    // Append booking data to formData
+    Object.entries(bookingData).forEach(([key, value]: [string, any]) => { // Specify the types explicitly
+        formData.append(key, value);
+    });
+
     try {
-        const response = await futsalAxios.post("/bookings/request", bookingData);
+        const response = await futsalAxios.post("/bookings/request", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         return response.data;
     } catch (error) {
         console.error("Error requesting booking:", error);
         throw error;
     }
 };
+
 
 export const getAllBookingRequests = async (futsalId: number) => {
   updateTokenInHeaders();

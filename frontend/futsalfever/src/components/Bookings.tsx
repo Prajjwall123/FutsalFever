@@ -5,6 +5,16 @@ import { deleteBookingById, getAllBookingRequests, updateBookingStatus } from '.
 const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
   const [bookingRequests, setBookingRequests] = useState<any[]>([]);
 
+  const handleDownloadImage = (imageUrl: string) => {
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'payment_image.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+
   useEffect(() => {
     fetchBookingRequests();
   }, [futsalId]);
@@ -13,6 +23,7 @@ const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
     getAllBookingRequests(futsalId)
       .then(data => {
         setBookingRequests(data);
+        console.log(data)
       })
       .catch(error => {
         console.error('Error fetching booking requests:', error);
@@ -73,37 +84,43 @@ const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
           </tr>
         </thead>
         <tbody>
-          {bookingRequests.map((booking) => (
-            <tr key={booking.id} className="border-b border-gray-200">
-              <td className="px-4 py-2">{booking.user.fullName}</td>
-              <td className="px-4 py-2">{booking.slot.startTime} - {booking.slot.endTime}</td>
-              <td className="px-4 py-2">
-                <img src={booking.paymentImage} alt="Payment" className="w-10 h-10 object-cover rounded-lg" />
-              </td>
-              <td className="px-4 py-2 text-gray-500">
-                {booking.verified ? 'Verified' : 'Pending'}
-              </td>
-              <td className="px-4 py-2 flex space-x-2">
-                {!booking.verified && (
-                  <>
-                    <button
-                      className="rounded-lg bg-green-500 text-white px-2 py-1 hover:bg-green-700"
-                      onClick={() => handleAcceptBooking(booking.id)}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className="rounded-lg bg-red-500 text-white px-2 py-1 hover:bg-red-700"
-                      onClick={() => handleRejectBooking(booking.id)}
-                    >
-                      Reject
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+  {bookingRequests.map((booking) => (
+    <tr key={booking.id} className="border-b border-gray-200">
+      <td className="px-4 py-2">{booking.user.fullName}</td>
+      <td className="px-4 py-2">{booking.slot.startTime} - {booking.slot.endTime}</td>
+      <td className="px-4 py-2">
+        <img
+          src={`data:image/jpeg;base64,${booking.paymentImage}`}
+          alt="Payment"
+          className="w-10 h-10 object-cover rounded-lg cursor-pointer"
+          onClick={() => handleDownloadImage(`data:image/jpeg;base64,${booking.paymentImage}`)}
+        />
+      </td>
+      <td className="px-4 py-2 text-gray-500">
+        {booking.verified ? 'Verified' : 'Pending'}
+      </td>
+      <td className="px-4 py-2 flex space-x-2">
+        {!booking.verified && (
+          <>
+            <button
+              className="rounded-lg bg-green-500 text-white px-2 py-1 hover:bg-green-700"
+              onClick={() => handleAcceptBooking(booking.id)}
+            >
+              Accept
+            </button>
+            <button
+              className="rounded-lg bg-red-500 text-white px-2 py-1 hover:bg-red-700"
+              onClick={() => handleRejectBooking(booking.id)}
+            >
+              Reject
+            </button>
+          </>
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
     </div>
   );

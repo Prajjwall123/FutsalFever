@@ -98,7 +98,7 @@ const CreateFutsalForm: React.FC = () => {
 
         <div className="flex flex-col space-y-2">
           <label htmlFor="qr" className="text-sm text-gray-500 font-medium">
-            QR Code:
+            Bank Account Number:
           </label>
           <input
             type="text"

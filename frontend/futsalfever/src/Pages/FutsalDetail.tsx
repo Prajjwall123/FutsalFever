@@ -9,11 +9,12 @@ import { getFutsalById, requestBooking } from '../services/futsalHelper';
 const BookingDetail = () => {
   const [futsal, setFutsal] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [paymentInput, setPaymentInput] = useState<string>('');
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const path = window.location.pathname;
   const futsalId = parseInt(path.split('/').pop() || '');
   const [qrData, setQRData] = useState<string>('');
+  const [paymentInput, setPaymentInput] = useState<File | null>(null);
+
 
   useEffect(() => {
     getFutsalById(futsalId)
@@ -28,8 +29,17 @@ const BookingDetail = () => {
   }, [futsalId]);
 
   const handlePaymentInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPaymentInput(event.target.value);
-  };
+    const files = event.target.files;
+    if (files && files.length > 0) {
+        const file = files[0];
+        setPaymentInput(file);
+    } else {
+        console.error('No file selected.');
+    }
+};
+
+
+
 
   const handleRequestBooking = async () => {
     try {
@@ -47,7 +57,7 @@ const BookingDetail = () => {
 
         const bookingData = {
             slotId: selectedSlotId,
-            paymentImage: paymentInput,
+            file: paymentInput,
             futsal_id: futsalId
         };
 
@@ -55,7 +65,7 @@ const BookingDetail = () => {
         console.log('Booking requested successfully:', response);
         alert('Booking request successful.');
 
-        setPaymentInput('');
+        setPaymentInput(null);
         setSelectedSlotId(null);
     } catch (error) {
         console.error('Error requesting booking:', error);
@@ -104,13 +114,12 @@ const BookingDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-10">
           <div className="bg-gray-200 rounded-lg shadow-md px-4 py-4">
-            <p className="pb-2 text-sm text-gray-700">Enter Payment Slip Path</p>
-            <input type="text" value={paymentInput} onChange={handlePaymentInputChange} className="rounded-lg bg-gray-100 px-4 py-2" />
+            <p className="pb-2 text-sm text-gray-700">Upload payment slip</p>
+            <input type="file" onChange={handlePaymentInputChange} className="rounded-lg bg-gray-100 px-4 py-2" />
             <button onClick={handleRequestBooking} className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gray-900 border border-transparent rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-blue-300">
               Request Booking
             </button>
           </div>
-
           <div className="flex flex-col items-center justify-center bg-gray-200 rounded-lg shadow-md px-4 py-6">
             <p className="pb-2 text-sm text-gray-700 text-center">Scan QR to make payment</p>
             <div className="flex flex-col items-center justify-center space-y-4">

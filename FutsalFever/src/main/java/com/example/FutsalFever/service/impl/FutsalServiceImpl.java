@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FutsalServiceImpl implements FutsalService {
@@ -106,18 +107,44 @@ public class FutsalServiceImpl implements FutsalService {
     }
 
     @Override
-    public Futsal updateFutsal(Integer id, Futsal updatedFutsal) {
-        Futsal futsal = futsalRepository.findById(id).orElse(null);
-        if (futsal != null) {
+    public Futsal updateFutsal(Integer id, Futsal updatedFutsal, MultipartFile imageFile) {
+        System.out.println(id);
+        Optional<Futsal> optionalFutsal = futsalRepository.findByUserId(id);
+
+        // Check if the optional contains a value
+        if (optionalFutsal.isPresent()) {
+            Futsal futsal = optionalFutsal.get(); // Extract the Futsal object from Optional
+
+            System.out.println("futsal name is" + futsal.getName());
+
             futsal.setName(updatedFutsal.getName());
             futsal.setAddress(updatedFutsal.getAddress());
             futsal.setPrice(updatedFutsal.getPrice());
-            futsal.setImage(updatedFutsal.getImage());
             futsal.setQr(updatedFutsal.getQr());
+
+            System.out.println("in impl" + updatedFutsal.getName());
+            System.out.println("in impl" + updatedFutsal.getPrice());
+
+            // Check if a new image file is provided
+            if (imageFile != null && !imageFile.isEmpty()) {
+                // Save the new image file
+                String filename = saveImage(imageFile);
+                // Set the new image filename to the futsal
+                futsal.setImage(filename);
+                System.out.println("new file name set in impl:" + filename);
+            }
+
             return futsalRepository.save(futsal);
+        } else {
+            // Handle the case where Futsal with given id is not found
+            throw new EntityNotFoundException("Futsal not found with id: " + id);
         }
-        return null;
+
     }
+
+
+
+
 
     @Override
     public Futsal getFutsalByOwnerId(Integer ownerId) {

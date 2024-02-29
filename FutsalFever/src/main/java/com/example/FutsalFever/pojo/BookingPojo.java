@@ -3,11 +3,13 @@ package com.example.FutsalFever.pojo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -21,8 +23,8 @@ public class BookingPojo {
     private Integer slotId;
     @Column(name = "userId", nullable = false)
     private Integer userId;
-    @Column(name = "paymentImage", nullable = false)
-    private String paymentImage;
+    @NotNull
+    private MultipartFile paymentImage;
     @Column(name = "verified", nullable = false)
     private boolean verified = false;
     @Column(name = "futsalId", nullable = false)

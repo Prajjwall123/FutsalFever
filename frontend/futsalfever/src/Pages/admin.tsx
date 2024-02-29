@@ -4,8 +4,10 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Bookings from '../components/Bookings';
 import NavBar from '../components/Navbar';
+import CreateSlotComponent from '../components/createSlot';
 import { getFutsalByOwnerId, updateFutsalByOwnerId } from '../services/futsalHelper';
-import CreateSlotComponent from './createSlot';
+
+
 
 const AdminFutsalPage: React.FC = () => {
   const [futsalDetails, setFutsalDetails] = useState<any>({});
@@ -29,7 +31,28 @@ const AdminFutsalPage: React.FC = () => {
 
   const handleUpdateFutsal = () => {
     if (!futsalDetails) return;
-    updateFutsalByOwnerId( futsalDetails)
+  
+    // Extract only the necessary details
+    const { name, address, qr, price } = futsalDetails;
+    
+    let file = null;
+  
+    // Check if the user has uploaded a new image
+    if (futsalDetails.futsalImage instanceof File) {
+      file = futsalDetails.futsalImage;
+    } else if (isBase64(futsalDetails.image)) { // Check if the image is base64
+      // Convert base64 to a Blob object
+      const blob = base64ToBlob(futsalDetails.image);
+      // Create a File object from the Blob
+      file = new File([blob], 'image.png', { type: 'image/png' });
+    }
+  
+    // Create an object containing only the necessary details
+    const updatedFutsalDetails = { name, file, address, qr, price };
+  
+    console.log(updatedFutsalDetails);
+  
+    updateFutsalByOwnerId(updatedFutsalDetails)
       .then(updatedFutsal => {
         setFutsalDetails(updatedFutsal);
         console.log('Futsal details updated successfully:', updatedFutsal);
@@ -38,6 +61,38 @@ const AdminFutsalPage: React.FC = () => {
         console.error('Error updating futsal details:', error);
       });
   };
+  
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      setFutsalDetails({ ...futsalDetails, futsalImage: file });
+    }
+  };
+  
+  
+  
+  // Function to check if a string is base64
+  const isBase64 = (str: string) => {
+    try {
+      return btoa(atob(str)) === str;
+    } catch (err) {
+      return false;
+    }
+  };
+  
+  // Function to convert base64 to Blob
+  const base64ToBlob = (base64: string) => {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; ++i) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new Blob([bytes]);
+  };
+  
 
 
   return (
@@ -60,7 +115,7 @@ const AdminFutsalPage: React.FC = () => {
           <input type="text" id="price" name="price" value={futsalDetails.price} onChange={(e) => setFutsalDetails({...futsalDetails, price: e.target.value})} className="rounded-lg bg-gray-200 px-4 py-2" />
         </div>
         <div className='px-4'>
-          <p className="text-sm text-gray-700 ">Upload Owner's QR Code</p>
+          <p className="text-sm text-gray-700 ">Enter Bank Account Number</p>
           <input 
             type="text" 
             value={futsalDetails.ownerQRCode} 
@@ -72,11 +127,9 @@ const AdminFutsalPage: React.FC = () => {
         <div className='px-4'>
           <p className="text-sm text-gray-700">Upload Futsal Image</p>
           <input 
-            type="text" 
-            value={futsalDetails.futsalImage} 
-            onChange={(e) => setFutsalDetails({...futsalDetails, futsalImage: e.target.value})} 
+            type="file" 
+            onChange={(e) => handleImageUpload(e)} 
             className="rounded-lg bg-gray-200 px-4 py-2" 
-            placeholder="Enter futsal image URL" 
           />
         </div>
         <button onClick={handleUpdateFutsal} 
@@ -94,7 +147,7 @@ const AdminFutsalPage: React.FC = () => {
         <div className="flex flex-col items-center justify-center space-y-4">
           <div className="flex flex-col items-center justify-center space-y-4">
             <div className="bg-white rounded-lg flex items-center justify-center">
-              <QRCode value={futsalDetails.ownerQRCode} /> {/* Use the number here */}
+              <QRCode value={futsalDetails.ownerQRCode} />
             </div>
           </div>
         </div>

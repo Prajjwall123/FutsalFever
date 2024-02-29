@@ -69,19 +69,20 @@ public class FutsalController {
 
 
     @PutMapping("/updateByOwnerId/{ownerEmail}")
-    public Futsal updateFutsalByOwnerId(@PathVariable String ownerEmail, @RequestBody Futsal updatedFutsal) {
+    public Futsal updateFutsalByOwnerId(@ModelAttribute Futsal updatedFutsal, @RequestParam("file") MultipartFile image, @PathVariable String ownerEmail) {
         // Fetch the owner ID using the owner's email
         Optional<User> ownerOptional = userService.getByEmail(ownerEmail);
         if (ownerOptional.isPresent()) {
             User owner = ownerOptional.get();
-            int ownerId = owner.getId();
-
+            int ownername= owner.getId();
+            System.out.println(ownername);
             // Update the futsal using the owner's ID
-            return futsalService.updateFutsal(ownerId, updatedFutsal);
+            return futsalService.updateFutsal(ownername, updatedFutsal, image);
         } else {
             throw new RuntimeException("Owner not found with email: " + ownerEmail);
         }
     }
+
 
 
     @GetMapping("/getByOwnerEmail/{ownerEmail}")

@@ -41,7 +41,7 @@ public class SpringSecurityConfig {
         httpSecurity
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("login","/user/save","/user/saveAdmin","/futsals/save" ,"/futsals/getAll","futsals/getById")
+                .requestMatchers("login","/user/save","/user/saveAdmin","/futsals/save" ,"/futsals/getAll","futsals/getById","/checkAdmin")
                 .permitAll()
 
                 .anyRequest()

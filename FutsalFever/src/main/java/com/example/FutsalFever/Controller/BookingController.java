@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class BookingController {
     private BookingService bookingService;
 
     @PostMapping("/request")
-    public ResponseEntity<Booking> requestBooking(@RequestBody BookingPojo bookingPojo) {
-        Booking requestedBooking = bookingService.requestBooking(bookingPojo);
+    public ResponseEntity<Booking> requestBooking(@ModelAttribute BookingPojo bookingPojo, @RequestParam("file") MultipartFile image) {
+        Booking requestedBooking = bookingService.requestBooking(bookingPojo, image);
         return new ResponseEntity<>(requestedBooking, HttpStatus.CREATED);
     }
 

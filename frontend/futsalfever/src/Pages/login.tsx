@@ -23,18 +23,15 @@ const LoginPage: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     
-    // Validation
     if (!credentials.email || !credentials.password) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    // Submitting to server
     Login(credentials)
     .then((jwtTokenData) => {
       console.log('User logged in: ', jwtTokenData);
       const role = jwtTokenData.is_admin;
-      alert(role);
       if (role === 'admin') {
         navigate('/admin');
       } else {
