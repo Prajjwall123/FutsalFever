@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import FutsalCard from '../components/FutsalCard';
 import HeroSection from '../components/HeroSection';
 import NavBar from '../components/Navbar';
-import { getAllFutsals } from '../services/futsalHelper';
+import { getAllFutsals } from '../services/helper';
 
 interface Futsal {
   id: number;

@@ -15,34 +15,44 @@ const FutsalCard: React.FC<FutsalCardProps> = ({
   price,
   onBook,
 }) => {
+  const handleBook = () => {
+    const hasToken = localStorage.getItem('jwtToken');
+
+    if (!hasToken) {
+      alert('Please login to book the futsal');
+      return;
+    }
+
+    onBook();
+  };
+
   return (
     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-  <a href="#">
-    <img
-      className="w-full h-48 object-cover"
-      src={`data:image/jpeg;base64,${image}`}
-      alt={name}
-    />
-  </a>
-  <div className="p-6">
-    <a href="#">
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">
-        {name}
-      </h3>
-    </a>
-    <div className="flex items-center mb-2">
-      <p className="text-gray-600">Address: {location}</p>
+      <a href="#">
+        <img
+          className="w-full h-48 object-cover"
+          src={`data:image/jpeg;base64,${image}`}
+          alt={name}
+        />
+      </a>
+      <div className="p-6">
+        <a href="#">
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            {name}
+          </h3>
+        </a>
+        <div className="flex items-center mb-2">
+          <p className="text-gray-600">Address: {location}</p>
+        </div>
+        <p className="text-gray-600 mb-2">Price: Rs.{price.toFixed(2)}</p>
+        <button
+          onClick={handleBook}
+          className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gray-900 border border-transparent rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-blue-300"
+        >
+          Book Now
+        </button>
+      </div>
     </div>
-    <p className="text-gray-600 mb-2">Price: Rs.{price.toFixed(2)}</p>
-    <button
-      onClick={onBook}
-      className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gray-900 border border-transparent rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-blue-300"
-    >
-      Book Now
-    </button>
-  </div>
-</div>
-
   );
 };
 

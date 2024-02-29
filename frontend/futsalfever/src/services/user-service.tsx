@@ -12,24 +12,26 @@ export const RegisterAdmin = (admin: { userName: string; fullName: string; passw
         .then((response) => response.data);
 };
 
-export const checkAdminStatus = (email:String) => {
-    return myAxios
-        .post(`/user/checkAdmin`)
-        .then((response) => response.data)
-        .catch((error) => {
-            console.error("Error checking admin status:", error);
-            throw error;
-        });
-};
+
 
 export const Login = (credentials: { email: string; password: string; }) => {
     return myAxios
-    .post('/login',  credentials)
+    .post('/login', credentials)
     .then((response) => {
         const { token } = response.data;
         
         localStorage.setItem('token', token);
         
         return response.data;
+    })
+    .catch((error) => {
+        if (error.response && error.response.status === 401) {
+            throw new Error('Invalid login credentials');
+        } else {
+            throw error;
+        }
     });
 };
+
+
+

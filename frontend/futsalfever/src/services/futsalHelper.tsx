@@ -19,16 +19,7 @@ export const updateTokenInHeaders = () => {
   futsalAxios.defaults.headers.common['Authorization'] = `Bearer ${getTokenFromLocalStorage()}`;
 };
 
-export const getAllFutsals = () => {
-  updateTokenInHeaders();
 
-  return futsalAxios.get('/futsals/getAll')
-    .then(response => response.data)
-    .catch(error => {
-      console.error('Error fetching futsals:', error);
-      throw error;
-    });
-};
 
 export const getFutsalById = (futsalId: number) => {
   updateTokenInHeaders();
@@ -93,6 +84,28 @@ export const getFutsalSlotsByFutsalIdPending = async (futsalId: number) => {
     throw error;
   }
 };
+
+export const checkAdminStatus = () => {
+  const token = getTokenFromLocalStorage();
+
+  if (!token) {
+    throw new Error('Token not found in local storage');
+  }
+  
+  const decodedToken = jwtDecode(token);
+  const userEmail = decodedToken.sub;
+
+  return futsalAxios
+      .post(`/user/checkAdmin`, { userEmail: userEmail })
+      .then((response) => {
+          return response.data; // Assuming the backend returns a boolean value
+      })
+      .catch((error) => {
+          console.error("Error checking admin status:", error);
+          throw error;
+      });
+};
+
 
 export const updateFutsalByOwnerId = async (updatedFutsalDetails: any) => {
   try {

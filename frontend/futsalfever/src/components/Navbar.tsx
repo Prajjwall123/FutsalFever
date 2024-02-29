@@ -21,6 +21,11 @@ const NavBar: React.FC = () => {
     }
   };
 
+  const handleLoginClick = () => {
+    navigate("/login");
+    window.location.reload();
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
   };
@@ -43,12 +48,11 @@ const NavBar: React.FC = () => {
             >
               HOME
             </Link>
-            <Link
-              to="/login"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            >
+            <button
+              onClick={handleLoginClick}
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
               LOGIN
-            </Link>
+            </button>
             <Link
               to="/login"
               onClick={handleLogout}

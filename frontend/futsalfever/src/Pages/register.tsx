@@ -26,6 +26,23 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+  
+    // Validation checks
+    if (!formData.userName || !formData.fullName || !formData.password || !formData.address || !formData.email) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+  
+    if (formData.password.length < 8) {
+      toast.error('Password must be at least 8 characters long');
+      return;
+    }
+  
+    if (!formData.email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+  
     const registerService = formData.userType === 'admin' ? RegisterAdmin : Register;
     const payload = formData.userType === 'admin' ? { ...formData, isAdmin: true } : formData;
   
@@ -40,7 +57,7 @@ const RegisterPage: React.FC = () => {
             console.log('User logged in: ', jwtTokenData);
             if (formData.userType === 'admin') {
               navigate('/futsal_creation');
-              window.location.reload()
+              window.location.reload();
             } else {
               navigate('/login');
             }
@@ -55,6 +72,7 @@ const RegisterPage: React.FC = () => {
         console.log('error log');
       });
   };
+  
   
 
   return (

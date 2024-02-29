@@ -36,24 +36,24 @@ public class SpringSecurityConfig {
 
 
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity httpSecurity)
-            throws Exception {
+    protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf().disable()
+                .csrf().disable() // Disable CSRF protection for development, but enable it in production
                 .authorizeHttpRequests()
-                .requestMatchers("login","/user/save","/user/saveAdmin","/futsals/save" ,"/futsals/getAll","futsals/getById","/user/checkAdmin")
-                .permitAll()
-
+                .requestMatchers("/login", "/user/save", "/user/saveAdmin",
+                        "/futsals/save", "/futsals/getAll", "/futsals/getById", "/user/checkAdmin")
+                .permitAll() // Allow these URLs without authentication
                 .anyRequest()
                 .authenticated()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless JWT approach
                 .and()
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
+
 
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../assets/logo2.png';
+import { checkAdminStatus } from '../services/futsalHelper';
 import { Login } from '../services/user-service';
 
 const LoginPage: React.FC = () => {
@@ -29,26 +30,35 @@ const LoginPage: React.FC = () => {
     }
 
     Login(credentials)
-    .then((jwtTokenData) => {
-      console.log('User logged in: ', jwtTokenData);
-      const role = jwtTokenData.is_admin;
-      if (role === 'admin') {
-        navigate('/admin');
-        window.location.reload()
-      } else {
-        navigate('/');
-        window.location.reload()
-      }
-    })
-      .catch((error) => {
-        console.error(error);
-        if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-          toast.error(error.response.data.message);
+  .then((jwtTokenData) => {
+    console.log('User logged in: ', jwtTokenData);
+    
+    // Check admin status asynchronously
+    checkAdminStatus()
+      .then((isAdmin) => {
+        if (isAdmin) {
+          navigate('/admin');
+          window.location.reload();
         } else {
-          toast.error('Something went wrong !!');
+          navigate('/');
+          window.location.reload();
         }
+      })
+      .catch((error) => {
+        console.error('Error checking admin status:', error);
+        // Handle error if needed
       });
-  };
+  })
+  .catch((error) => {
+    console.error(error);
+    if (error.response && (error.response.status === 400 || error.response.status === 404)) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error('Invalid login credentials');
+    }
+  });
+
+  };  
 
   const handleReset = () => {
     setCredentials({
