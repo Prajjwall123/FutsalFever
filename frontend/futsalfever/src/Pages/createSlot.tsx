@@ -1,48 +1,42 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { createSlot } from '../services/futsalHelper';
 
 const CreateSlotComponent = ({ futsalId }: { futsalId: number }) => {
-  // Define state for slot data, loading state, and error state
-  const [slotData, setSlotData] = useState({
-      startTime: '',
-      endTime: '',
-      booked: false,
-      futsalId: -1, // Default value until futsalId is determined
-
+    const [slotData, setSlotData] = useState({
+        startTime: '',
+        endTime: '',
+        booked: false,
+        futsalId: -1,
     });
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Handle changes in input fields
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
-      const { name, value } = e.target;
-      console.log("new place adding futsal id:"+futsalId)
-      setSlotData({ ...slotData, [name]: value, futsalId: futsalId });
-  };
-  
+        const { name, value } = e.target;
+        setSlotData({ ...slotData, [name]: value, futsalId: futsalId });
+    };
 
-    // Handle form submission
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        setLoading(true); // Set loading to true while making the request
-        setError(null); // Reset error state
+        setLoading(true);
+        setError(null);
 
         try {
-            // Attempt to create the slot using the provided data
-            console.log('Slot data:', slotData);
             const createdSlot = await createSlot(slotData);
             console.log('Slot created successfully:', createdSlot);
-            // Reset form fields or handle success message
+            toast("Slot created successfully")
         } catch (error) {
             console.error('Error creating slot:', error);
+            toast("Failed to create slot")
             setError('Failed to create slot. Please try again later.');
         } finally {
-            setLoading(false); // Set loading back to false after request completes
+            setLoading(false);
         }
     };
 
     return (
-        <div className="container mx-auto max-w-sm px-4 py-8">
+        <div className="container mx-auto max-w-sm px-4 py-8 bg-white">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Create Slot</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -70,11 +64,12 @@ const CreateSlotComponent = ({ futsalId }: { futsalId: number }) => {
                     />
                 </div>
 
-                <button type="submit" className="rounded-lg bg-blue-500 text-white px-4 py-2 hover:bg-blue-700">
+                <button type="submit" 
+          className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-gray-900 border border-transparent rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-blue-300"
+          >
                     {loading ? 'Creating Slot...' : 'Create Slot'}
                 </button>
                 
-                {/* Display error message if there's an error */}
                 {error && <p className="text-red-500">{error}</p>}
             </form>
         </div>

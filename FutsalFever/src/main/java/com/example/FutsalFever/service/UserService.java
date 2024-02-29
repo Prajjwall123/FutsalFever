@@ -15,6 +15,8 @@ public interface UserService {
 
     void deleteById(Integer id);
 
+    boolean isAdmin(String email);
+
     Optional<User> getByEmail(String email);
 
 }

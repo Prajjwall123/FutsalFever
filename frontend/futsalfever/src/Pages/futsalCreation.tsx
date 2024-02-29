@@ -1,74 +1,64 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { createFutsal } from '../services/futsalHelper'; // Update with your service imports
+import { createFutsal } from '../services/futsalHelper';
 
-const FutsalCreation: React.FC = () => {
+
+interface FutsalData {
+  name: string;
+  address: string;
+  file: File | null;
+  qr: string;
+  price: number;
+}
+
+const CreateFutsalForm: React.FC = () => {
   const navigate = useNavigate();
-  const [futsalData, setFutsalData] = useState({
+  const [futsalData, setFutsalData] = useState<FutsalData>({
     name: '',
     address: '',
-    image: null as File | null, // Updated to accept File type
+    file: null,
     qr: '',
     price: 0,
   });
 
-  useEffect(() => {
-    // Refresh logic goes here
-    // For example, you might want to reset the form fields
-    setFutsalData({
-      name: '',
-      address: '',
-      image: null,
-      qr: '',
-      price: 0,
-    });
-  }, []); // Empty dependency array ensures this effect runs only once after mounting
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFutsalData({
-      ...futsalData,
+    setFutsalData(prevData => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    if (file) {
-      setFutsalData({
-        ...futsalData,
-        image: file,
-      });
+    setFutsalData(prevData => ({
+      ...prevData,
+      file: file || null,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      console.log(futsalData)
+      await createFutsal(futsalData);
+      toast("Futsal created successfully")
+      // navigate("/admin")
+    } catch (error) {
+      toast("Futsal not created")
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    createFutsal(futsalData)
-      .then((resp) => {
-        console.log(resp);
-        console.log('Futsal created successfully');
-        toast.success('Futsal created successfully');
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log('Error creating futsal');
-        toast.error('Error creating futsal');
-      });
-
-    navigate('/admin');
-  };
-
   return (
-    <div className="container dark:bg-gray-800 rounded-3xl dark:border-gray-700 mx-auto max-w-sm px-4 py-8 mt-20">
-      <h2 className="text-2xl text-gray-500 font-semibold mb-4">Create Futsal</h2>
+    <div className="container bg-white rounded-3xl mx-auto max-w-sm px-4 py-8 mt-20">
+      <h2 className="text-2xl text-gray-900 font-semibold mb-4">Create Futsal</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
         <div className="flex flex-col space-y-2">
-          <label htmlFor="name" className="text-sm text-gray-500 font-medium">Name:</label>
+          <label htmlFor="name" className="text-sm text-gray-500 font-medium">
+            Name:
+          </label>
           <input
             type="text"
             id="name"
@@ -80,7 +70,9 @@ const FutsalCreation: React.FC = () => {
         </div>
 
         <div className="flex flex-col space-y-2">
-          <label htmlFor="address" className="text-sm text-gray-500 font-medium">Address:</label>
+          <label htmlFor="address" className="text-sm text-gray-500 font-medium">
+            Address:
+          </label>
           <input
             type="text"
             id="address"
@@ -92,18 +84,22 @@ const FutsalCreation: React.FC = () => {
         </div>
 
         <div className="flex flex-col space-y-2">
-          <label htmlFor="image" className="text-sm text-gray-500 font-medium">Image:</label>
+          <label htmlFor="file" className="text-sm text-gray-500 font-medium">
+            Image:
+          </label>
           <input
             type="file"
-            id="image"
-            name="image"
-            onChange={handleFileChange}
+            id="file"
+            name="file"
+            onChange={handleImageChange}
             className="rounded-lg bg-gray-200 px-4 py-2"
           />
         </div>
 
         <div className="flex flex-col space-y-2">
-          <label htmlFor="qr" className="text-sm text-gray-500 font-medium">Account Number:</label>
+          <label htmlFor="qr" className="text-sm text-gray-500 font-medium">
+            QR Code:
+          </label>
           <input
             type="text"
             id="qr"
@@ -115,7 +111,9 @@ const FutsalCreation: React.FC = () => {
         </div>
 
         <div className="flex flex-col space-y-2">
-          <label htmlFor="price" className="text-sm text-gray-500 font-medium">Price:</label>
+          <label htmlFor="price" className="text-sm text-gray-500 font-medium">
+            Price:
+          </label>
           <input
             type="number"
             id="price"
@@ -126,7 +124,7 @@ const FutsalCreation: React.FC = () => {
           />
         </div>
 
-        <div className='justify-content-center'>
+        <div className="justify-content-center">
           <button type="submit" className="rounded-lg bg-blue-500 text-white px-4 py-2 hover:bg-blue-700">
             Create Futsal
           </button>
@@ -136,4 +134,4 @@ const FutsalCreation: React.FC = () => {
   );
 };
 
-export default FutsalCreation;
+export default CreateFutsalForm;

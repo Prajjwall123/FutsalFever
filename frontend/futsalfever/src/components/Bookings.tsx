@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { deleteBookingById, getAllBookingRequests, updateBookingStatus } from '../services/futsalHelper';
 
 const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
@@ -22,6 +23,7 @@ const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
     updateBookingStatus(bookingId, 'accept')
       .then(updatedBooking => {
         updateBookingInState(updatedBooking);
+        toast("Accepted booking request ")
       })
       .catch(error => {
         console.error('Error accepting booking:', error);
@@ -34,6 +36,7 @@ const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
         updateBookingStatus(bookingId, 'reject')
           .then(updatedBooking => {
             updateBookingInState(updatedBooking);
+            toast("Rejected booking request ")
           })
           .catch(error => {
             console.error('Error rejecting booking:', error);
@@ -56,15 +59,22 @@ const Bookings: React.FC<{ futsalId: number }> = ({ futsalId }) => {
   };
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-8">
+    <div className="container mx-auto max-w-3xl px-4 py-8 bg-white">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Booking Requests</h2>
 
       <table className="table-auto w-full rounded-lg shadow-md">
-        {/* Table header */}
+        <thead>
+          <tr>
+            <th className="px-4 py-2">User</th>
+            <th className="px-4 py-2">Time</th>
+            <th className="px-4 py-2">Payment</th>
+            <th className="px-4 py-2">Status</th>
+            <th className="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
         <tbody>
           {bookingRequests.map((booking) => (
             <tr key={booking.id} className="border-b border-gray-200">
-              {/* Table body */}
               <td className="px-4 py-2">{booking.user.fullName}</td>
               <td className="px-4 py-2">{booking.slot.startTime} - {booking.slot.endTime}</td>
               <td className="px-4 py-2">

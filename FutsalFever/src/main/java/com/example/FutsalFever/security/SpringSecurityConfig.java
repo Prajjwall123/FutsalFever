@@ -1,9 +1,4 @@
 package com.example.FutsalFever.security;
-
-
-
-
-
 import com.example.FutsalFever.config.PasswordEncoderUtil;
 import com.example.FutsalFever.service.impl.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +41,7 @@ public class SpringSecurityConfig {
         httpSecurity
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/login","/user/save","/user/saveAdmin","/futsals/getAll","/futsals/getById")
+                .requestMatchers("login","/user/save","/user/saveAdmin","/futsals/save" ,"/futsals/getAll","futsals/getById")
                 .permitAll()
 
                 .anyRequest()

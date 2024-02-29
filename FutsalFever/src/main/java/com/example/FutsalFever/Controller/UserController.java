@@ -28,7 +28,18 @@ public class UserController {
     public String saveAdminUser(@Valid @RequestBody UserPojo userPojo){
         userPojo.set_admin(true);
         userService.saveUser(userPojo);
-        return "admin user create successfully.";
+        return "admin user created successfully.";
+    }
+
+    @PostMapping("/checkAdmin")
+    public boolean checkAdminUser( String userEmail) {
+        boolean isAdmin = userService.isAdmin(userEmail);
+
+        if (isAdmin) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @GetMapping("/getAll")

@@ -2,67 +2,53 @@ import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 export const BASE_URL = 'http://localhost:8082';
 
-// Function to fetch the token from local storage
+
 const getTokenFromLocalStorage = () => {
   return localStorage.getItem('token');
 };
 
-// Create an Axios instance with custom configuration including the token
 const futsalAxios = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json', // Assuming JSON API
-    'Authorization': `Bearer ${getTokenFromLocalStorage()}` // Include the token in the Authorization header
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getTokenFromLocalStorage()}`
   }
 });
 
-// Function to update token in Axios headers if it changes
 export const updateTokenInHeaders = () => {
   futsalAxios.defaults.headers.common['Authorization'] = `Bearer ${getTokenFromLocalStorage()}`;
 };
 
-// Function to fetch all futsals
 export const getAllFutsals = () => {
-  // Update token in headers in case it has changed
   updateTokenInHeaders();
 
-  // Make a GET request to fetch all futsals
   return futsalAxios.get('/futsals/getAll')
     .then(response => response.data)
     .catch(error => {
       console.error('Error fetching futsals:', error);
-      throw error; // Rethrow the error for handling in the calling code
+      throw error;
     });
 };
 
-// Function to fetch a specific futsal by ID
 export const getFutsalById = (futsalId: number) => {
-  // Update token in headers in case it has changed
   updateTokenInHeaders();
 
-  // Make a GET request to fetch the futsal by ID
   return futsalAxios.get(`futsals/getById/${futsalId}`)
     .then(response => {
-      // Check if the response is successful
       if (response && response.data) {
-        return response.data; // Return the data if successful
+        return response.data;
       } else {
-        throw new Error('Empty response'); // Throw an error if the response is empty
+        throw new Error('Empty response');
       }
     })
     .catch(error => {
-      // Check if it's a network error
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.error('Server responded with error:', error.response.data);
         throw new Error('Server responded with error');
       } else if (error.request) {
-        // The request was made but no response was received
         console.error('No response received:', error.request);
         throw new Error('No response received');
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error('Error setting up request:', error.message);
         throw error;
       }
@@ -70,21 +56,17 @@ export const getFutsalById = (futsalId: number) => {
 };
 
 
-// Function to fetch a specific futsal by name
 export const getFutsalByName = (futsalName: string) => {
-  // Update token in headers in case it has changed
   updateTokenInHeaders();
 
-  // Make a GET request to fetch the futsal by name
   return futsalAxios.get(`futsals/getByName/${futsalName}`)
     .then(response => response.data)
     .catch(error => {
       console.error('Error fetching futsal by name:', error);
-      throw error; // Rethrow the error for handling in the calling code
+      throw error;
     });
 };
 
-// Function to fetch Futsal slots by Futsal ID
 export const getFutsalSlotsByFutsalId = async (futsalId: number) => {
   updateTokenInHeaders();
   try {
@@ -94,12 +76,11 @@ export const getFutsalSlotsByFutsalId = async (futsalId: number) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching futsal slots by futsal ID:', error);
-    throw error; // Rethrow the error for handling in the calling code
+    throw error;
   }
 };
 
 
-// Function to fetch Futsal slots by Futsal ID
 export const getFutsalSlotsByFutsalIdPending = async (futsalId: number) => {
   updateTokenInHeaders();
   try {
@@ -109,117 +90,120 @@ export const getFutsalSlotsByFutsalIdPending = async (futsalId: number) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching futsal slots by futsal ID:', error);
-    throw error; // Rethrow the error for handling in the calling code
+    throw error;
   }
 };
 
-// Function to update futsal details by ID
 export const updateFutsalByOwnerId = async (updatedFutsalDetails: any) => {
   try {
-    // Retrieve the token from local storage
     const token = getTokenFromLocalStorage();
 
-    // Check if the token exists
     if (!token) {
       throw new Error('Token not found in local storage');
     }
     
-    // Decode the JWT to extract user information
     const decodedToken = jwtDecode(token);
     
-    // Extract user ID from the decoded token
     const userId = decodedToken.sub;
 
-    // Update headers with the JWT
     futsalAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    // Make a PUT request to the backend API endpoint to update futsals by owner ID
     const response = await futsalAxios.put(`futsals/updateByOwnerId/${userId}`, updatedFutsalDetails);
 
-    // Return the updated futsal details from the response data
     return response.data;
   } catch (error) {
-    // Handle any errors
     throw error;
   }
 };
 
 
-  export const createFutsal = (futsalData: any) => {
-    // Update token in headers in case it has changed
-    updateTokenInHeaders();
-  
-    // Make a POST request to create a new futsal
-    return futsalAxios.post(`/futsals/save`, futsalData)
-      .then(response => response.data)
-      .catch(error => {
-        console.error('Error creating futsal:', error);
-        throw error; // Rethrow the error for handling in the calling code
-      });
-  };
+export const createFutsal = (futsalData: any) => {
+  updateTokenInHeaders();
+  const formData = new FormData();
+
+  formData.append('name', futsalData.name);
+  formData.append('address', futsalData.address);
+  formData.append('qr', futsalData.qr);
+  formData.append('price', futsalData.price);
+
+  formData.append('file', futsalData.file);
+
+  return futsalAxios.post(`/futsals/save`, formData, {
+      headers: {
+          'Content-Type': 'multipart/form-data'
+      }
+  })
+  .then(response => response.data)
+  .catch(error => {
+      console.error('Error creating futsal:', error);
+      throw error;
+  });
+};
+
   
 
 
   export const getFutsalByOwnerId = async () => {
     try {
-      // Retrieve the token from local storage
       const token = getTokenFromLocalStorage();
   
-      // Check if the token exists
       if (!token) {
         throw new Error('Token not found in local storage');
       }
       
-      // Decode the JWT to extract user information
       const decodedToken = jwtDecode(token);
       
-      // Extract user ID from the decoded token
       const userId = decodedToken.sub;
   
       console.log(userId);
   
-      // Update headers with the JWT
       futsalAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   
-      // Make a GET request to the backend API endpoint to fetch futsals by owner ID
       const response = await futsalAxios.get(`futsals/getByOwnerEmail/${userId}`);
   
-      // Return the futsals fetched by owner ID from the response data
       return response.data;
     } catch (error) {
-      // Handle any errors
       throw error;
     }
   };
   
 
+  export const getUserIdFromToken= async () => {
+    const token = getTokenFromLocalStorage();
+  
+    if (!token) {
+      throw new Error('Token not found in local storage');
+    }
+    
+    const decodedToken = jwtDecode(token);
+
+    const userId = decodedToken.sub;
+
+    return userId;
+    
+  }
+
   export const requestBooking = async (bookingData: any) => {
-    // Retrieve the token from local storage
     const token = getTokenFromLocalStorage();
 
-    // Check if the token exists
     if (!token) {
         throw new Error('Token not found in local storage');
     }
 
-    // Decode the JWT to extract user information
     const decodedToken = jwtDecode(token);
 
-    // Extract user ID from the decoded token
     const username = decodedToken.sub;
 
-    // Add the username to the bookingData object
     bookingData.username = username;
 
-    // Update token in headers
     updateTokenInHeaders();
 
     try {
         const response = await futsalAxios.post("/bookings/request", bookingData);
-        return response.data; // Return the response data if the request is successful
+        return response.data;
     } catch (error) {
         console.error("Error requesting booking:", error);
-        throw error; // Rethrow the error for handling in the calling code
+        throw error;
     }
 };
 
@@ -229,7 +213,7 @@ export const getAllBookingRequests = async (futsalId: number) => {
     console.log("the futsal id is:" + futsalId);
     const response = await futsalAxios.get(`/bookings/pending/${futsalId}`);
     console.log(response.data);
-    return response.data; // Assuming the response contains a 'bookings' array
+    return response.data;
   } catch (error) {
     console.error('Error fetching booking requests:', error);
     throw error;

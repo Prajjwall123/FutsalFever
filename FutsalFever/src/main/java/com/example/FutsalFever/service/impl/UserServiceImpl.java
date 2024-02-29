@@ -57,6 +57,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isAdmin(String email) {
+        return userRepository.isAdmin(email);
+    }
+
+    @Override
     public Optional<User> getByEmail(String email) {
         return userRepository.getUserByEmail(email); // Implement findByEmail in UserRepository
     }
