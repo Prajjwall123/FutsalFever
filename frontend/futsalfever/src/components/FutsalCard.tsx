@@ -18,10 +18,10 @@ const FutsalCard: React.FC<FutsalCardProps> = ({
   const handleBook = () => {
     const hasToken = localStorage.getItem('jwtToken');
 
-    if (!hasToken) {
-      alert('Please login to book the futsal');
-      return;
-    }
+    // if (!hasToken) {
+    //   alert('Please login to book the futsal');
+    //   return;
+    // }
 
     onBook();
   };
