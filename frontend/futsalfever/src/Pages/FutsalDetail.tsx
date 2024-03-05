@@ -1,10 +1,9 @@
-import QRCode from 'qrcode.react';
-import React, { useEffect, useState } from "react";
+import QRCode from "qrcode.react";
+import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import FutsalSlotsComponent from '../components/FutsalSlots';
 import NavBar from '../components/Navbar';
-import { getFutsalById, requestBooking } from '../services/futsalHelper';
-
+import { getFutsalById, getVerifiedBookingsByUserId, requestBooking } from '../services/futsalHelper';
 
 const BookingDetail = () => {
   const [futsal, setFutsal] = useState<any>(null);
@@ -14,9 +13,30 @@ const BookingDetail = () => {
   const futsalId = parseInt(path.split('/').pop() || '');
   const [qrData, setQRData] = useState<string>('');
   const [paymentInput, setPaymentInput] = useState<File | null>(null);
+  const [hasAcceptedBooking, setHasAcceptedBooking] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
 
 
   useEffect(() => {
+    getVerifiedBookingsByUserId()
+      .then((verifiedBookings) => {
+        // Check if any verified booking has been accepted by this futsal
+        const acceptedBooking = verifiedBookings.find((booking: any) => booking.slot.futsal.id === futsalId);
+
+        if (acceptedBooking) {
+          setHasAcceptedBooking(true);
+
+          // Display a toast with the name of the futsal that accepted the booking
+          const acceptedFutsalName = acceptedBooking.slot.futsal.name;
+          toast.success(`Booking accepted by ${acceptedFutsalName}`, {
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching verified bookings:', error);
+      });
+
+    // Fetch futsal details if the user is logged in
     getFutsalById(futsalId)
       .then(data => {
         setFutsal(data);
@@ -31,18 +51,22 @@ const BookingDetail = () => {
   const handlePaymentInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-        const file = files[0];
-        setPaymentInput(file);
+      const file = files[0];
+      setPaymentInput(file);
     } else {
-        console.error('No file selected.');
+      console.error('No file selected.');
     }
-};
-
-
-
+  };
 
   const handleRequestBooking = async () => {
     try {
+      const hasToken = localStorage.getItem('token');
+      console.log(hasToken)
+
+      if (!hasToken) {
+        alert('Please login to book the futsal');
+        return;
+      }
         if (!selectedSlotId) {
             console.error('Slot selection is missing.');
             toast('Please select a slot before requesting booking.');

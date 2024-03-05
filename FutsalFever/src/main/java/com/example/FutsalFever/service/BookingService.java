@@ -13,4 +13,5 @@ public interface BookingService {
     Booking acceptBooking(Integer bookingId);
     void rejectBooking(Integer bookingId);
     Booking requestBooking(BookingPojo bookingPojo, MultipartFile imageFile);
+    List<Booking> getVerifiedBookingsByUserId(Integer userId);
 }

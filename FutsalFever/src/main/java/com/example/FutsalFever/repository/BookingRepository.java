@@ -12,4 +12,6 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("SELECT b FROM Booking b WHERE b.slot.futsal.id = :futsalId AND b.verified = false")
 
     List<Booking> findPendingBookingsByFutsalId(Integer futsalId);
+
+    List<Booking> findByUserIdAndVerified(Integer userId, boolean verified);
 }

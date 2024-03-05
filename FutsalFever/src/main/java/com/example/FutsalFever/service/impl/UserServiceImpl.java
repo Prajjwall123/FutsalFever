@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Override
     public void saveUser(UserPojo userPojo) {
-        // Check if the email already exists in the database
         Optional<User> existingUser = userRepository.getUserByEmail(userPojo.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("Email is already registered");

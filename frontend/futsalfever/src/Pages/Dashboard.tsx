@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 import FutsalCard from '../components/FutsalCard';
 import HeroSection from '../components/HeroSection';
 import NavBar from '../components/Navbar';
@@ -18,6 +19,7 @@ const Dashboard: React.FC = () => {
   const [futsals, setFutsals] = useState<Futsal[]>([]);
 
   useEffect(() => {
+
     getAllFutsals()
       .then((futsalsData) => {
         setFutsals(futsalsData);
@@ -27,9 +29,9 @@ const Dashboard: React.FC = () => {
       });
   }, []);
 
-  const handleBook = (id: number) => {
+  const handleBook = (id: number, name: string) => {
     console.log(`Navigate to booking page for id: ${id}`);
-    navigate("/booking/"+id)
+    navigate("/booking/"+id);
   };
 
   return (
@@ -48,7 +50,7 @@ const Dashboard: React.FC = () => {
               image={futsal.image}
               location={futsal.address}
               price={futsal.price}
-              onBook={() => handleBook(futsal.id)}
+              onBook={() => handleBook(futsal.id, futsal.name)}
             />
           ))}
         </div>

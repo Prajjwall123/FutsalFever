@@ -10,11 +10,11 @@ import lombok.Setter;
 @Setter
 public class FutsalSlot {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Assuming auto-increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "futsal_id") // Mapping the foreign key
+    @JoinColumn(name = "futsal_id")
     private Futsal futsal;
 
     @Column(name = "start_time", nullable = false)

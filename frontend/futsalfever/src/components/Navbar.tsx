@@ -24,6 +24,7 @@ const NavBar: React.FC = () => {
   const handleLoginClick = () => {
     navigate("/login");
     window.location.reload();
+    window.location.reload();
   };
 
   const handleLogout = () => {

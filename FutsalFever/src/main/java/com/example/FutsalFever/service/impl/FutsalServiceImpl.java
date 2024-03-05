@@ -22,7 +22,6 @@ public class FutsalServiceImpl implements FutsalService {
 
     @Autowired
     private FutsalRepository futsalRepository;
-
     private final String UPLOAD_DIRECTORY = new StringBuilder()
             .append(System.getProperty("user.dir"))
             .append("/futsalFeverApp/Images")
@@ -55,10 +54,8 @@ public class FutsalServiceImpl implements FutsalService {
     public Futsal getFutsalByName(String name) {
         Futsal futsal = futsalRepository.findByName(name);
         if (futsal != null) {
-            // Get the image path from the futsal object and convert it to base64
             String imagePath = "/Images/" + futsal.getImage();
             String base64Image = imageToBase64.getImageBase64(imagePath);
-            // Set the base64 image in the futsal object
             futsal.setImage(base64Image);
         }
         return futsal;
@@ -67,21 +64,16 @@ public class FutsalServiceImpl implements FutsalService {
 
     @Override
     public Futsal saveFutsal(Futsal futsal, MultipartFile imageFile) {
-        // Convert and save image to directory
         String filename = saveImage(imageFile);
 
-        // Set image filename to the futsal
         futsal.setImage(filename);
 
-        // Get the user associated with the futsal
         User user = futsal.getUser();
 
-        // Check if the user has already created a futsal
         if (userHasFutsal(user)) {
             throw new RuntimeException("User has already created a futsal");
         }
 
-        // Save the futsal
         return futsalRepository.save(futsal);
     }
 
@@ -97,7 +89,6 @@ public class FutsalServiceImpl implements FutsalService {
     }
 
     public boolean userHasFutsal(User user) {
-        // Check if the user has already created a futsal
         return futsalRepository.existsByUser(user);
     }
 
@@ -111,7 +102,6 @@ public class FutsalServiceImpl implements FutsalService {
         System.out.println(id);
         Optional<Futsal> optionalFutsal = futsalRepository.findByUserId(id);
 
-        // Check if the optional contains a value
         if (optionalFutsal.isPresent()) {
             Futsal futsal = optionalFutsal.get(); // Extract the Futsal object from Optional
 
@@ -125,38 +115,26 @@ public class FutsalServiceImpl implements FutsalService {
             System.out.println("in impl" + updatedFutsal.getName());
             System.out.println("in impl" + updatedFutsal.getPrice());
 
-            // Check if a new image file is provided
             if (imageFile != null && !imageFile.isEmpty()) {
-                // Save the new image file
                 String filename = saveImage(imageFile);
-                // Set the new image filename to the futsal
                 futsal.setImage(filename);
                 System.out.println("new file name set in impl:" + filename);
             }
 
             return futsalRepository.save(futsal);
         } else {
-            // Handle the case where Futsal with given id is not found
             throw new EntityNotFoundException("Futsal not found with id: " + id);
         }
 
     }
-
-
-
-
-
     @Override
     public Futsal getFutsalByOwnerId(Integer ownerId) {
-        // Delegate the call to the repository method to fetch futsal by owner ID
         Futsal futsal = futsalRepository.findByUserId(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException("Futsal not found for owner ID: " + ownerId));
 
-        // Get the image path from the futsal object and convert it to base64
         String imagePath = "/Images/" + futsal.getImage();
         String base64Image = imageToBase64.getImageBase64(imagePath);
 
-        // Set the base64 image in the futsal object
         futsal.setImage(base64Image);
 
         return futsal;

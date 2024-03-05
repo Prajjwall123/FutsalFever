@@ -98,7 +98,9 @@ export const checkAdminStatus = () => {
   return futsalAxios
       .post(`/user/checkAdmin`, { userEmail: userEmail })
       .then((response) => {
+        console.log(response.data)
           return response.data; // Assuming the backend returns a boolean value
+          
       })
       .catch((error) => {
           console.error("Error checking admin status:", error);
@@ -187,6 +189,18 @@ export const createFutsal = (futsalData: any) => {
     }
   };
   
+
+  // Function to fetch verified bookings by user ID
+export const getVerifiedBookingsByUserId = async () => {
+  updateTokenInHeaders(); // Update token in headers before making the request
+  try {
+    const response = await futsalAxios.get(`/bookings/verified`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching verified bookings by user ID:', error);
+    throw error;
+  }
+};
 
   export const getUserIdFromToken= async () => {
     const token = getTokenFromLocalStorage();

@@ -28,26 +28,20 @@ const LoginPage: React.FC = () => {
       toast.error('Please fill in all fields');
       return;
     }
-
     Login(credentials)
-  .then((jwtTokenData) => {
-    console.log('User logged in: ', jwtTokenData);
     
-    // Check admin status asynchronously
-    checkAdminStatus()
-      .then((isAdmin) => {
-        if (isAdmin) {
-          navigate('/admin');
-          window.location.reload();
-        } else {
-          navigate('/');
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        console.error('Error checking admin status:', error);
-        // Handle error if needed
-      });
+  .then(async (jwtTokenData) => {
+    console.log('User logged in: ', jwtTokenData);
+    let a=checkAdminStatus();
+    if(await a===true){
+      navigate("/admin");
+      window.location.reload();
+    }
+    else{
+      navigate("/")
+      window.location.reload();
+    }
+    
   })
   .catch((error) => {
     console.error(error);
@@ -58,7 +52,7 @@ const LoginPage: React.FC = () => {
     }
   });
 
-  };  
+  };
 
   const handleReset = () => {
     setCredentials({

@@ -46,10 +46,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getPendingBookingsForFutsal(Integer futsalId) {
-        // Retrieve pending bookings for the specified futsalId
         List<Booking> pendingBookings = bookingRepository.findPendingBookingsByFutsalId(futsalId);
 
-        // Iterate through each booking to update the payment image to base64 representation
         for (Booking booking : pendingBookings) {
             String imagePath = "/Images/" + booking.getPaymentImage(); // Assuming the paymentImage field holds the image file name
             String base64Image = imageToBase64.getImageBase64(imagePath);
@@ -62,14 +60,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking acceptBooking(Integer bookingId) {
-        // Implement logic to accept the booking with the given bookingId
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         if (booking != null) {
             booking.setVerified(true);
             booking.getSlot().setBooked(true);
             return bookingRepository.save(booking);
         }
-        return null; // Handle if booking is not found
+        return null;
     }
 
     @Override
@@ -84,7 +81,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking requestBooking(BookingPojo bookingPojo, MultipartFile imageFile) {
-        // Implement logic to create a new booking request based on the provided data
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName();
         Optional<User> userOptional = userService.getByEmail(currentUserEmail);
@@ -92,10 +88,8 @@ public class BookingServiceImpl implements BookingService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            // Fetch the FutsalSlot entity based on the provided slot ID
             FutsalSlot futsalSlotOfHere = futsalSlotService.getSlotById(bookingPojo.getSlotId());
 
-            // Save the payment image from the multipart file
             String paymentImageFilename = saveImage(imageFile);
 
             Booking booking = new Booking();
@@ -105,10 +99,8 @@ public class BookingServiceImpl implements BookingService {
             booking.setUsername(bookingPojo.getUsername());
             booking.setVerified(false);
 
-            // Save the booking to the database
             Booking savedBooking = bookingRepository.save(booking);
 
-            // Return the saved booking entity
             return savedBooking;
 
         } else {
@@ -126,6 +118,10 @@ public class BookingServiceImpl implements BookingService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to save image: " + e.getMessage());
         }
+    }
+
+    public List<Booking> getVerifiedBookingsByUserId(Integer userId) {
+        return bookingRepository.findByUserIdAndVerified(userId, true);
     }
 
 

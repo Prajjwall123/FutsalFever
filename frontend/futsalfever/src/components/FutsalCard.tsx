@@ -16,14 +16,14 @@ const FutsalCard: React.FC<FutsalCardProps> = ({
   onBook,
 }) => {
   const handleBook = () => {
-    const hasToken = localStorage.getItem('jwtToken');
+    const isLoggedIn = !!localStorage.getItem('token'); // Check if token exists
 
-    // if (!hasToken) {
-    //   alert('Please login to book the futsal');
-    //   return;
-    // }
-
-    onBook();
+    if (isLoggedIn) {
+      onBook();
+    } else {
+      alert('Please login to view futsal details.');
+      // You can also use toastify or any other toast library here
+    }
   };
 
   return (

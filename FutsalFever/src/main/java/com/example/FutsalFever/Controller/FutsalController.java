@@ -43,11 +43,9 @@ public class FutsalController {
 
     @PostMapping("/save")
     public ResponseEntity<String> saveFutsal(@ModelAttribute Futsal futsal, @RequestParam("file") MultipartFile image) {
-        // Fetch the authenticated user details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserEmail = authentication.getName(); // Get the authenticated user's email
 
-        // Fetch the User entity from the database based on the user email
         Optional<User> userOptional = userService.getByEmail(currentUserEmail);
 
         if (userOptional.isPresent()) {
@@ -70,13 +68,11 @@ public class FutsalController {
 
     @PutMapping("/updateByOwnerId/{ownerEmail}")
     public Futsal updateFutsalByOwnerId(@ModelAttribute Futsal updatedFutsal, @RequestParam("file") MultipartFile image, @PathVariable String ownerEmail) {
-        // Fetch the owner ID using the owner's email
         Optional<User> ownerOptional = userService.getByEmail(ownerEmail);
         if (ownerOptional.isPresent()) {
             User owner = ownerOptional.get();
             int ownername= owner.getId();
             System.out.println(ownername);
-            // Update the futsal using the owner's ID
             return futsalService.updateFutsal(ownername, updatedFutsal, image);
         } else {
             throw new RuntimeException("Owner not found with email: " + ownerEmail);
@@ -87,12 +83,10 @@ public class FutsalController {
 
     @GetMapping("/getByOwnerEmail/{ownerEmail}")
     public Futsal getFutsalByOwnerId(@PathVariable String ownerEmail) {
-        // Fetch futsal by owner ID using the FutsalService
         Optional<User> ownerId = userService.getByEmail(ownerEmail);
         if (ownerId.isPresent()) {
             User user = ownerId.get();
 
-            // Extract the user's ID
             int newOwner = user.getId();
 
             return futsalService.getFutsalByOwnerId(newOwner);

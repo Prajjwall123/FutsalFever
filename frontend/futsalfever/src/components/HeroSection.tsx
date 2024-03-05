@@ -8,6 +8,7 @@ const HeroSection: React.FC = () => {
     const handleclick=() =>{
         navigate("/login")
         window.location.reload();
+        window.location.reload();
     }
     return (
         <section className="bg-white">
