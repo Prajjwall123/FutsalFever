@@ -33,11 +33,11 @@ class UserServiceImplTest {
     @Test
     void saveUser_NewUser_Success() {
         UserPojo userPojo = new UserPojo();
-        userPojo.setFullName("John Doe");
-        userPojo.setUserName("johndoe");
+        userPojo.setFullName("Ram Shrestha");
+        userPojo.setUserName("ramstha");
         userPojo.setPassword("password");
-        userPojo.setAddress("123 Main St");
-        userPojo.setEmail("johndoe@example.com");
+        userPojo.setAddress("Gatthaghar");
+        userPojo.setEmail("ramshrestha@gmail.com");
 
         when(userRepository.getUserByEmail(anyString())).thenReturn(Optional.empty());
 
@@ -49,7 +49,7 @@ class UserServiceImplTest {
     @Test
     void saveUser_ExistingUser_ThrowException() {
         UserPojo userPojo = new UserPojo();
-        userPojo.setEmail("johndoe@example.com");
+        userPojo.setEmail("ramshrestha@gmail.com");
 
         when(userRepository.getUserByEmail(anyString())).thenReturn(Optional.of(new User()));
 
@@ -66,20 +66,20 @@ class UserServiceImplTest {
     @Test
     void getByEmail_UserExists_ReturnUser() {
         User user = new User();
-        user.setEmail("johndoe@example.com");
-        when(userRepository.getUserByEmail("johndoe@example.com")).thenReturn(Optional.of(user));
+        user.setEmail("ramshrestha@gmail.com");
+        when(userRepository.getUserByEmail("ramshrestha@gmail.com")).thenReturn(Optional.of(user));
 
-        Optional<User> foundUser = userService.getByEmail("johndoe@example.com");
+        Optional<User> foundUser = userService.getByEmail("ramshrestha@gmail.com");
 
         assertTrue(foundUser.isPresent());
-        assertEquals("johndoe@example.com", foundUser.get().getEmail());
+        assertEquals("ramshrestha@gmail.com", foundUser.get().getEmail());
     }
 
     @Test
     void getByEmail_UserNotExists_ReturnEmpty() {
         when(userRepository.getUserByEmail(anyString())).thenReturn(Optional.empty());
 
-        Optional<User> foundUser = userService.getByEmail("nonexisting@example.com");
+        Optional<User> foundUser = userService.getByEmail("ramshrestha@gmail.com");
 
         assertFalse(foundUser.isPresent());
     }
