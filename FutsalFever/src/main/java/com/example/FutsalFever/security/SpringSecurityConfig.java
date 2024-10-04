@@ -41,7 +41,7 @@ public class SpringSecurityConfig {
                 .csrf().disable() // Disable CSRF protection for development, but enable it in production
                 .authorizeHttpRequests()
                 .requestMatchers("/login", "/user/save", "/user/saveAdmin",
-                        "/futsals/save", "/futsals/getAll", "/futsals/getById", "/user/checkAdmin")
+                        "/futsals/save", "/futsals/getAll", "/futsals/getById", "/user/checkAdmin","/roles/getAll","/roles/deleteById/{id}","/roles/getByName/{name}","/roles/deleteById/{id}","roles/getById/{id}","roles/save","/roles/deleteByName/{name}","/roles/updateByName/{name}","/user/getAll")
                 .permitAll() // Allow these URLs without authentication
                 .anyRequest()
                 .authenticated()
